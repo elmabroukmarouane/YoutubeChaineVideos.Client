@@ -1,0 +1,14 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="Form" @bind-IsValid="@Success" @bind-Errors="@Errors">
+            <MudTextField T="int?" Label="Category ID" Placeholder="Enter the Video Catgory ID !" Required="true" RequiredError="Category ID is required!" @bind-Value=@YouTubeVideoCategoryViewModel!.CategoryId />
+            <br />
+            <br />
+            <MudTextField T="string" Label="Category Name" Placeholder="Enter the Video Catgory Name !" Required="true" RequiredError="Category Name is required!" @bind-Value=@YouTubeVideoCategoryViewModel!.CategoryName />
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Info" OnClick="Ok" Disabled="!Success || Errors.Count() > 0">@TitleOkButton</MudButton>
+        <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>

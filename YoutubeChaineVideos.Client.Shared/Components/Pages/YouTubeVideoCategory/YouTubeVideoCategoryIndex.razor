@@ -1,0 +1,85 @@
+﻿@page "/videos-categories"
+@using System.Text.Json
+<PageTitle>@TitleContent</PageTitle>
+
+<style>
+    .label-bold-summary {
+    font-weight: bold;
+    }
+</style>
+
+<div class="container-fluid px-4">
+    <TitleContent Title="Videos Categories" />
+    <DescriptionCardContent>
+        This is the videos categories module
+    </DescriptionCardContent>
+    <div class="card mb-4">
+        <TableHeader>
+            <i class="fas fa-table me-1"></i> Videos Categories Table
+        </TableHeader>
+        <RadzenFieldset @ref="RadzenFieldsetUpload" AllowCollapse="true" class="m-2">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="upload_file" class="me-1" /><b>Add a video category</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard>
+                    <RadzenButton class="mb-4" Icon="add" ButtonStyle="ButtonStyle.Primary" Text="Add Video Category" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Position = TooltipPosition.Top, Duration = default, Style = "background-color: var(--rz-secondary); color: var(--rz-text-contrast-color)" }, "Add"))" Click="@(e => ShowDialogAsync())" Disabled="@IsUpdate" />
+                </RadzenCard>
+            </ChildContent>
+            <SummaryTemplate>
+                <RadzenCard class="m-2">
+                    <label class="label-bold-summary">Click on + to show ADD Button</label>
+                </RadzenCard>
+            </SummaryTemplate>
+        </RadzenFieldset>
+        <RadzenFieldset @ref="RadzenFieldsetDataGrid" AllowCollapse="true" class="mb-2 ms-2 me-2">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="category" class="me-1" /><b>Videos Categories List</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                <MudTable Items="@Items" FixedHeader="true" Dense="true" Hover="true" Bordered="false" Striped="true" Loading="@IsLoading" Filter="new Func<YouTubeVideoCategoryViewModel,bool>(FilterFunc1)" @bind-SelectedItem="SelectedItem" MultiSelection="true" SelectionChangeable="true" @bind-SelectedItems="SelectedItems">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Items List</MudText>
+                        <MudSpacer />
+                        <MudTextField @bind-Value="TableSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CategoryId!.ToString()!)">Video Category ID</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CategoryName!)">Video Category Name</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CreatedBy!)">Created By</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CreateDate!.ToString()!)">Created Date</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.UpdatedBy!)">Updated By</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.UpdateDate!.ToString()!)">Updated Date</MudTableSortLabel></MudTh>
+                        <MudTh>Actions</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Video Category ID">@context.CategoryId</MudTd>
+                        <MudTd DataLabel="Video Category Name">@context.CategoryName</MudTd>
+                        <MudTd DataLabel="CreatedBy">@context.CreatedBy</MudTd>
+                        <MudTd DataLabel="CreateDate">@context.CreateDate.ToString()</MudTd>
+                        <MudTd DataLabel="UpdatedBy">@context.UpdatedBy</MudTd>
+                        <MudTd DataLabel="UpdateDate">@context.UpdateDate.ToString()</MudTd>
+                        <MudTd>
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Position = TooltipPosition.Top, Duration = default, Style = "background-color: var(--rz-secondary); color: var(--rz-text-contrast-color)" }, "Update"))" Click="@(e => ShowDialogAsync("Update", context, true, "Update"))" />@* Click="@(args => EditRow(category))" *@
+                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Position = TooltipPosition.Top, Duration = default, Style = "background-color: var(--rz-secondary); color: var(--rz-text-contrast-color)" }, "Delete"))" />@* Click="@(args => DeleteRow(category))" *@
+                        </MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            </ChildContent>
+            <SummaryTemplate>
+                <RadzenCard class="mb-2 ms-2 me-2">
+                    <label class="label-bold-summary">@Count Videos @(Count > 1 ? "Catgories" : "Category")</label>
+                </RadzenCard>
+            </SummaryTemplate>
+        </RadzenFieldset>
+    </div>
+</div>
+
+<YouTubeVideoCategoryAddUpdate />

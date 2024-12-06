@@ -1,0 +1,18 @@
+﻿@inherits LayoutComponentBase
+@Body
+<RadzenComponents />
+
+@* Required *@
+<MudThemeProvider />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+@* Scroll to TOP *@
+<MudScrollToTop>
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowUpward" />
+</MudScrollToTop>

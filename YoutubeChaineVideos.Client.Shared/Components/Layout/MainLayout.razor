@@ -1,0 +1,34 @@
+﻿@inherits LayoutComponentBase
+<PageTitle>@TitleContent</PageTitle>
+
+<NavTop />
+<div id="layoutSidenav">
+    <NavBar />
+    <div id="layoutSidenav_content">
+        <main>
+            @Body
+        </main>
+        <Footer />
+    </div>
+</div>
+
+<RadzenComponents />
+
+@* Required *@
+<MudThemeProvider />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+@* Scroll to TOP *@
+<MudScrollToTop>
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowUpward" />
+</MudScrollToTop>
+
+@* Sweet Alert 2*@
+@* <PageScript Src="/_content/CurrieTechnologies.Razor.SweetAlert2/sweetAlert2.min.js" />
+<HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: false)" /> *@

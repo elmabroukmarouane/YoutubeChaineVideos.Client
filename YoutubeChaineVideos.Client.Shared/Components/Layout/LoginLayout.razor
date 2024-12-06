@@ -1,0 +1,28 @@
+﻿@inherits LayoutComponentBase
+
+<div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+        <main>
+            @Body
+        </main>
+    </div>
+    <div id="layoutAuthentication_footer">
+        <Footer />
+    </div>
+</div>
+<RadzenComponents />
+
+@* Required *@
+<MudThemeProvider />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+@* Scroll to TOP *@
+<MudScrollToTop>
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowUpward" />
+</MudScrollToTop>
