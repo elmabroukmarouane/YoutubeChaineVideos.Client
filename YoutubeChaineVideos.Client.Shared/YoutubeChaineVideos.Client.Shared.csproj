@@ -25,4 +25,10 @@
     <ProjectReference Include="..\YoutubeChaineVideos.Client.Busines\YoutubeChaineVideos.Client.Busines.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Components\Pages\YouTubeVideoCategory\YouTubeVideoCategoryDelete.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

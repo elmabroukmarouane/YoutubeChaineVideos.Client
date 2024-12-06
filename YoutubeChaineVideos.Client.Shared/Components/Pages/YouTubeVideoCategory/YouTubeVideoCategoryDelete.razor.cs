@@ -8,19 +8,18 @@ using YoutubeChaineVideos.Client.Shared.Components.Common;
 
 namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategory
 {
-    public partial class YouTubeVideoCategoryAddUpdate : ComponentBase
+    public partial class YouTubeVideoCategoryDelete : ComponentBase
     {
         private bool Success { get; set; } = true;
         private string[] Errors { get; set; } = [];
-        private MudForm? Form { get; set; }
         [CascadingParameter]
         private MudDialogInstance? MudDialog { get; set; }
         [Parameter]
         public YouTubeVideoCategoryViewModel? YouTubeVideoCategoryViewModel { get; set; }
         [Parameter]
-        public string? TitleOkButton { get; set; }
+        public string? ContentMessageDelete { get; set; }
         [Parameter]
-        public bool IsUpdate { get; set; }
+        public string? TitleOkButton { get; set; }
         [Parameter]
         public string? Uri { get; set; }
         [Parameter]
@@ -37,14 +36,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
         private async Task Ok()
         {
             var YouTubeVideoCategoryViewModelResponse = new YouTubeVideoCategoryViewModel();
-            if (IsUpdate)
-            {
-                YouTubeVideoCategoryViewModelResponse = await GenericService!.UpdateAsync(Uri!, Token, YouTubeVideoCategoryViewModel!);
-            }
-            else
-            {
-                YouTubeVideoCategoryViewModelResponse = await GenericService!.CreateAsync(Uri!, Token, YouTubeVideoCategoryViewModel!);
-            }
+            YouTubeVideoCategoryViewModelResponse = await GenericService!.DeleteAsync(Uri!, Token, YouTubeVideoCategoryViewModel!);
             if (Success || Errors.Length <= 0) MudDialog?.Close(DialogResult.Ok(new EntityDbResponse<YouTubeVideoCategoryViewModel>()
             {
                 IsSuccess = true,
@@ -52,12 +44,12 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
                 new MessageStatus()
                 {
                     StatusCode = YouTubeVideoCategoryViewModelResponse?.StatusCode,
-                    Message = typeof(YouTubeVideoCategoryViewModel).ToString().Replace("YoutubeChaineVideos.Client.Domain.Models.", string.Empty).Replace("ViewModel", string.Empty) + " entity" + (IsUpdate ? " updated" : " added") + " successfully"
+                    Message = typeof(YouTubeVideoCategoryViewModel).ToString().Replace("YoutubeChaineVideos.Client.Domain.Models.", string.Empty).Replace("ViewModel", string.Empty) + " entity deleted successfully"
                 } :
                 new MessageStatus()
                 {
                     StatusCode = YouTubeVideoCategoryViewModelResponse?.StatusCode,
-                    Message = (IsUpdate ? "Update" : "Add") + " Failed !"
+                    Message = "Delete Failed !"
                 },
                 Entity = YouTubeVideoCategoryViewModelResponse
             }));

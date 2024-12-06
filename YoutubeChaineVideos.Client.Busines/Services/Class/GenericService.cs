@@ -66,26 +66,32 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Class
                 if (entityResponse is not null) entityResponse.StatusCode = response?.StatusCode ?? System.Net.HttpStatusCode.InternalServerError;
                 return entityResponse;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw new Exception(ex.Message, ex);
             }
         }
 
         public async Task<IList<TEntityViewModel>?> CreateAsync(string uri, string? token, IList<TEntityViewModel> entities)
         {
-            // SetTokenToHeader(token);
-            var response = await _httpClient.PostAsJsonAsync(uri, entities);
-            var entitiesResponse = await response.Content.ReadFromJsonAsync<IList<TEntityViewModel>>();
-            if (entitiesResponse is not null)
+            try
             {
-                foreach (var entity in entitiesResponse)
+                // SetTokenToHeader(token);
+                var response = await _httpClient.PostAsJsonAsync(uri, entities);
+                var entitiesResponse = await response.Content.ReadFromJsonAsync<IList<TEntityViewModel>>();
+                if (entitiesResponse is not null)
                 {
-                    entity.StatusCode = response.StatusCode;
+                    foreach (var entity in entitiesResponse)
+                    {
+                        entity.StatusCode = response.StatusCode;
+                    }
                 }
+                return entitiesResponse;
             }
-            return entitiesResponse;
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
         #endregion
 
@@ -109,51 +115,72 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Class
 
         public async Task<IList<TEntityViewModel>?> UpdateAsync(string uri, string? token, IList<TEntityViewModel> entities)
         {
-            // SetTokenToHeader(token);
-            var response = await _httpClient.PutAsJsonAsync(uri, entities);
-            var entitiesResponse = await response.Content.ReadFromJsonAsync<IList<TEntityViewModel>>();
-            if (entitiesResponse is not null)
+            try
             {
-                foreach (var entity in entitiesResponse)
+                // SetTokenToHeader(token);
+                var response = await _httpClient.PutAsJsonAsync(uri, entities);
+                var entitiesResponse = await response.Content.ReadFromJsonAsync<IList<TEntityViewModel>>();
+                if (entitiesResponse is not null)
                 {
-                    entity.StatusCode = response.StatusCode;
+                    foreach (var entity in entitiesResponse)
+                    {
+                        entity.StatusCode = response.StatusCode;
+                    }
                 }
+                return entitiesResponse;
             }
-            return entitiesResponse;
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
         #endregion
 
         #region DELETE
         public async Task<TEntityViewModel?> DeleteAsync(string uri, string? token, TEntityViewModel entity)
         {
-            // SetTokenToHeader(token);
-            var entityJsonSerialize = JsonSerializer.Serialize(entity);
-            var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Delete, uri)
+            try
             {
-                Content = new StringContent(entityJsonSerialize, Encoding.UTF8, "application/json")
-            });
-            var entityResponse = await response.Content.ReadFromJsonAsync<TEntityViewModel>();
-            if (entityResponse is not null) entityResponse.StatusCode = response?.StatusCode ?? System.Net.HttpStatusCode.InternalServerError;
-            return entityResponse;
+                // SetTokenToHeader(token);
+                var entityJsonSerialize = JsonSerializer.Serialize(entity);
+                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Delete, uri)
+                {
+                    Content = new StringContent(entityJsonSerialize, Encoding.UTF8, "application/json")
+                });
+                var entityResponse = await response.Content.ReadFromJsonAsync<TEntityViewModel>();
+                if (entityResponse is not null) entityResponse.StatusCode = response?.StatusCode ?? System.Net.HttpStatusCode.InternalServerError;
+                return entityResponse;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
 
         public async Task<IList<TEntityViewModel>?> DeleteAsync(string uri, string? token, IList<TEntityViewModel> entities)
         {
-            // SetTokenToHeader(token);
-            var entitiesJsonSerialize = JsonSerializer.Serialize(entities);
-            var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Delete, uri)
+            try
             {
-                Content = new StringContent(entitiesJsonSerialize, Encoding.UTF8, "application/json")
-            });
-            var entitiesResponse = await response.Content.ReadFromJsonAsync<IList<TEntityViewModel>>();
-            if (entitiesResponse is not null)
-            {
-                foreach (var entity in entitiesResponse)
+                // SetTokenToHeader(token);
+                var entitiesJsonSerialize = JsonSerializer.Serialize(entities);
+                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Delete, uri)
                 {
-                    entity.StatusCode = response.StatusCode;
+                    Content = new StringContent(entitiesJsonSerialize, Encoding.UTF8, "application/json")
+                });
+                var entitiesResponse = await response.Content.ReadFromJsonAsync<IList<TEntityViewModel>>();
+                if (entitiesResponse is not null)
+                {
+                    foreach (var entity in entitiesResponse)
+                    {
+                        entity.StatusCode = response.StatusCode;
+                    }
                 }
+                return entitiesResponse;
             }
-            return entitiesResponse;
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
         #endregion
 
