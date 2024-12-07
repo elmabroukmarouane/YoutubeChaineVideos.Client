@@ -25,5 +25,9 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Interface
         Task<TEntityViewModel?> DeleteAsync(string uri, string? token, TEntityViewModel entity);
         Task<IList<TEntityViewModel>?> DeleteAsync(string uri, string? token, IList<TEntityViewModel> entities);
         #endregion
+
+        #region FILTER
+        bool FilterFunc(TEntityViewModel entity, string? tableSearchString);
+        #endregion
     }
 }

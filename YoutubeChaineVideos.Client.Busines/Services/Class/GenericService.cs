@@ -184,6 +184,25 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Class
         }
         #endregion
 
+        #region FILTER
+        public bool FilterFunc(TEntityViewModel? entity, string? tableSearchString)
+        {
+            if (entity == null) return false;
+            if (string.IsNullOrWhiteSpace(tableSearchString))
+                return true;
+
+            foreach (var prop in entity.GetType().GetProperties())
+            {
+                var value = prop.GetValue(entity)?.ToString();
+                if (!string.IsNullOrWhiteSpace(value) && value.ToLower().Contains(tableSearchString.ToLower(), StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        #endregion
+
         #region ADDTOKEN
         private void SetTokenToHeader(string? token)
         {

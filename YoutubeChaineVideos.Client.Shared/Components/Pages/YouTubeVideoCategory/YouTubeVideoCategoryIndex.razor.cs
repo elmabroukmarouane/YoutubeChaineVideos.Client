@@ -1,16 +1,12 @@
 ﻿using Blazored.LocalStorage;
 using YoutubeChaineVideos.Client.Busines.Services.Interface;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using YoutubeChaineVideos.Client.Shared.Components.Extensions.LocalStorage;
 using YoutubeChaineVideos.Client.Domain.Models.Settings;
 using Radzen;
 using Radzen.Blazor;
 using MudBlazor;
-using static MudBlazor.CategoryTypes;
 using CurrieTechnologies.Razor.SweetAlert2;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using YoutubeChaineVideos.Client.Domain.Models;
 using YoutubeChaineVideos.Client.Domain.Models.Responses;
 
@@ -27,7 +23,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
         [Inject]
         ILocalStorageService? LocalStorageService { get; set; }
         [Inject]
-        protected IGenericService<YouTubeVideoCategoryViewModel>? GenericService { get; set; }
+        protected IGenericService<YouTubeVideoCategoryViewModel> GenericService { get; set; }
         [Inject]
         TooltipService? TooltipService { get; set; }
         [Inject]
@@ -68,7 +64,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
             try
             {
                 IsLoading = true;
-                Items = await GenericService!.GetEntitiesAsync(Uri!, Token);
+                Items = await GenericService.GetEntitiesAsync(Uri!, Token);
                 Items = Items?.OrderByDescending(x => x.Id).ToList();
                 Count = Items != null ? Items.Count : 0;
             }
@@ -79,24 +75,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
             finally { IsLoading = false; }
         }
 
-        private bool FilterFunc1(YouTubeVideoCategoryViewModel item) => FilterFunc(item, TableSearchString);
-
-        private bool FilterFunc(YouTubeVideoCategoryViewModel item, string? tableSearchString)
-        {
-            if (string.IsNullOrWhiteSpace(tableSearchString))
-                return true;
-            if (item!.CategoryName!.ToLower().Contains(tableSearchString.ToLower(), StringComparison.OrdinalIgnoreCase))
-                return true;
-            if (item!.CreatedBy!.ToLower().Contains(tableSearchString.ToLower(), StringComparison.OrdinalIgnoreCase))
-                return true;
-            if (item!.CreateDate!.ToString()!.ToLower().Contains(tableSearchString.ToLower(), StringComparison.OrdinalIgnoreCase))
-                return true;
-            if (item!.UpdatedBy!.ToLower().Contains(tableSearchString.ToLower(), StringComparison.OrdinalIgnoreCase))
-                return true;
-            if (item!.UpdateDate!.ToString()!.ToLower().Contains(tableSearchString.ToLower(), StringComparison.OrdinalIgnoreCase))
-                return true;
-            return false;
-        }
+        private bool FilterFunc1(YouTubeVideoCategoryViewModel item) => GenericService.FilterFunc(item, TableSearchString);
 
         private async Task ShowDialogAsync(
             string TitileDialog = "Add",
@@ -220,6 +199,8 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
         }
 
         void ShowTooltip(ElementReference elementReference, TooltipOptions? options = null, string? message = default) => TooltipService?.Open(elementReference, message ?? string.Empty, options);
+
+        private TooltipOptions CreateTooltipOptions() => new() { Position = TooltipPosition.Top, Style = "background-color: var(--rz-secondary); color: var(--rz-text-contrast-color)" };
 
         public void Dispose() => GC.SuppressFinalize(TooltipService!);
     }
