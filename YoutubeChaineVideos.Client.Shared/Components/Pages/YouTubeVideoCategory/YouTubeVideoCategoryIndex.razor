@@ -9,23 +9,23 @@
 </style>
 
 <div class="container-fluid px-4">
-    <TitleContent Title="Videos Categories" />
+    <TitleContent Title="YouTubeVideoCategories" />
     <DescriptionCardContent>
-        This is the videos categories module
+        This is the YouTubeVideoCategories module
     </DescriptionCardContent>
     <div class="card mb-4">
         <TableHeader>
-            <i class="fas fa-table me-1"></i> Videos Categories Table
+            <i class="fas fa-table me-1"></i> YouTubeVideoCategories Table
         </TableHeader>
         <RadzenFieldset @ref="RadzenFieldsetUpload" AllowCollapse="true" class="m-2">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
-                    <RadzenIcon Icon="upload_file" class="me-1" /><b>Add a video category</b>
+                    <RadzenIcon Icon="upload_file" class="me-1" /><b>Add</b>
                 </span>
             </HeaderTemplate>
             <ChildContent>
                 <RadzenCard>
-                    <RadzenButton class="mb-4" Icon="add" ButtonStyle="ButtonStyle.Primary" Text="Add Video Category" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Position = TooltipPosition.Top, Duration = default, Style = "background-color: var(--rz-secondary); color: var(--rz-text-contrast-color)" }, "Add"))" Click="@(e => ShowDialogAsync())" Disabled="@IsUpdate" />
+                    <RadzenButton class="mb-4" Icon="add" ButtonStyle="ButtonStyle.Primary" Text="Add Video Category" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Add"))" Click="@(e => ShowDialogAsync())" Disabled="@IsUpdate" />
                 </RadzenCard>
             </ChildContent>
             <SummaryTemplate>
@@ -37,7 +37,7 @@
         <RadzenFieldset @ref="RadzenFieldsetDataGrid" AllowCollapse="true" class="mb-2 ms-2 me-2">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
-                    <RadzenIcon Icon="category" class="me-1" /><b>Videos Categories List</b>
+                    <RadzenIcon Icon="category" class="me-1" /><b>YouTubeVideoCategories List</b>
                 </span>
             </HeaderTemplate>
             <ChildContent>
@@ -64,8 +64,8 @@
                         <MudTd DataLabel="UpdatedBy">@context.UpdatedBy</MudTd>
                         <MudTd DataLabel="UpdateDate">@context.UpdateDate.ToString()</MudTd>
                         <MudTd>
-                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Position = TooltipPosition.Top, Duration = default, Style = "background-color: var(--rz-secondary); color: var(--rz-text-contrast-color)" }, "Update"))" Click="@(e => ShowDialogAsync("Update", context, true, "Update"))" />
-                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Position = TooltipPosition.Top, Duration = default, Style = "background-color: var(--rz-secondary); color: var(--rz-text-contrast-color)" }, "Delete"))" Click="@(e => ShowDeleteDialogAsync(context))" />@* Click="@(args => DeleteRow(category))" *@
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Update"))" Click="@(e => ShowDialogAsync("Update", context, true, "Update"))" />
+                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Delete"))" Click="@(e => ShowDeleteDialogAsync(context))" />
                         </MudTd>
                     </RowTemplate>
                     <PagerContent>
