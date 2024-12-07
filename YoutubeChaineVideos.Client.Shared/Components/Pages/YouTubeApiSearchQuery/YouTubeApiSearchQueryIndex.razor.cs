@@ -10,10 +10,10 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using YoutubeChaineVideos.Client.Domain.Models;
 using YoutubeChaineVideos.Client.Domain.Models.Responses;
 
-namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategory
+namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiSearchQuery
 {
     //[Authorize]
-    public partial class YouTubeVideoCategoryIndex : IComponent, IDisposable
+    public partial class YouTubeApiSearchQueryIndex : IComponent, IDisposable
     {
         [Inject]
         private IJSRuntime? JSRuntime { get; set; }
@@ -23,20 +23,20 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
         [Inject]
         ILocalStorageService? LocalStorageService { get; set; }
         [Inject]
-        protected IGenericService<YouTubeVideoCategoryViewModel>? GenericService { get; set; }
+        protected IGenericService<YouTubeApiSearchQueryViewModel>? GenericService { get; set; }
         [Inject]
         TooltipService? TooltipService { get; set; }
         [Inject]
         private SweetAlertService? Swal { get; set; }
         private string TitleSwalTitle { get; set; } = string.Empty;
         private string MessageSwalTitle { get; set; } = string.Empty;
-        public static IList<YouTubeVideoCategoryViewModel>? Items { get; set; }
+        public static IList<YouTubeApiSearchQueryViewModel>? Items { get; set; }
         public bool IsLoading { get; set; } = false;
         public int Count = 0;
         private RadzenFieldset? RadzenFieldsetUpload { get; set; }
         private RadzenFieldset? RadzenFieldsetDataGrid { get; set; }
-        private YouTubeVideoCategoryViewModel SelectedItem { get; set; } = new();
-        private HashSet<YouTubeVideoCategoryViewModel>? SelectedItems { get; set; }
+        private YouTubeApiSearchQueryViewModel SelectedItem { get; set; } = new();
+        private HashSet<YouTubeApiSearchQueryViewModel>? SelectedItems { get; set; }
         private bool IsUpdate { get; set; } = false;
         public string? TableSearchString { get; set; } = string.Empty;
         public string? Token { get; set; }
@@ -46,8 +46,8 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
         public string? Uri { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            TitleContent = BaseSettingsApp?.BaseTitleApp + " - Videos Categories";
-            Uri = BaseSettingsApp?.BaseUrlApiWebHttp + "VideoCategory";
+            TitleContent = BaseSettingsApp?.BaseTitleApp + " - YouTubeApiSearchQuerys";
+            Uri = BaseSettingsApp?.BaseUrlApiWebHttp + "SearchQuery";
             //Token = await LocalStorageService!.GetItemAsStringAsync("token");
             await LoadData();
         }
@@ -75,20 +75,20 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
             finally { IsLoading = false; }
         }
 
-        private bool FilterFunc1(YouTubeVideoCategoryViewModel item) => GenericService!.FilterFunc(item, TableSearchString);
+        private bool FilterFunc1(YouTubeApiSearchQueryViewModel item) => GenericService!.FilterFunc(item, TableSearchString);
 
         private async Task ShowDialogAsync(
             string TitileDialog = "Add",
-            YouTubeVideoCategoryViewModel? YouTubeVideoCategoryViewModel = null,
+            YouTubeApiSearchQueryViewModel? YouTubeApiSearchQueryViewModel = null,
             bool isUpdate = false,
             string titleOkButton = "Add")
         {
             try
             {
-                var parameters = new DialogParameters<YouTubeVideoCategoryAddUpdate>()
+                var parameters = new DialogParameters<YouTubeApiSearchQueryAddUpdate>()
                 {
                     {
-                        x => x.YouTubeVideoCategoryViewModel, YouTubeVideoCategoryViewModel ?? new YouTubeVideoCategoryViewModel()
+                        x => x.YouTubeApiSearchQueryViewModel, YouTubeApiSearchQueryViewModel ?? new YouTubeApiSearchQueryViewModel()
                     },
                     {
                         x => x.TitleOkButton, titleOkButton
@@ -105,12 +105,12 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
                 };
                 IsUpdate = isUpdate;
                 var options = new MudBlazor.DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
-                var dialog = await DialogService!.ShowAsync<YouTubeVideoCategoryAddUpdate>(TitileDialog, parameters, options);
+                var dialog = await DialogService!.ShowAsync<YouTubeApiSearchQueryAddUpdate>(TitileDialog, parameters, options);
                 var result = await dialog.Result;
 
                 if (!result!.Canceled)
                 {
-                    var data = (EntityDbResponse<YouTubeVideoCategoryViewModel>)result.Data!;
+                    var data = (EntityDbResponse<YouTubeApiSearchQueryViewModel>)result.Data!;
                     if (data != null)
                     {
                         await LoadData();
@@ -140,19 +140,19 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
         }
 
         private async Task ShowDeleteDialogAsync(
-            YouTubeVideoCategoryViewModel? YouTubeVideoCategoryViewModel = null,
+            YouTubeApiSearchQueryViewModel? YouTubeApiSearchQueryViewModel = null,
             string TitileDialog = "Delete",
             string titleOkButton = "Delete")
         {
             try
             {
-                var parameters = new DialogParameters<YouTubeVideoCategoryDelete>()
+                var parameters = new DialogParameters<YouTubeApiSearchQueryDelete>()
                 {
                     {
                         x => x.ContentMessageDelete, "Are you sure to delete this row ?"
                     },
                     {
-                        x => x.YouTubeVideoCategoryViewModel, YouTubeVideoCategoryViewModel ?? new YouTubeVideoCategoryViewModel()
+                        x => x.YouTubeApiSearchQueryViewModel, YouTubeApiSearchQueryViewModel ?? new YouTubeApiSearchQueryViewModel()
                     },
                     {
                         x => x.TitleOkButton, titleOkButton
@@ -165,12 +165,12 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
                     }
                 };
                 var options = new MudBlazor.DialogOptions() { CloseButton = true, BackdropClick = false };
-                var dialog = await DialogService!.ShowAsync<YouTubeVideoCategoryDelete>(TitileDialog, parameters, options);
+                var dialog = await DialogService!.ShowAsync<YouTubeApiSearchQueryDelete>(TitileDialog, parameters, options);
                 var result = await dialog.Result;
 
                 if (!result!.Canceled)
                 {
-                    var data = (EntityDbResponse<YouTubeVideoCategoryViewModel>)result.Data!;
+                    var data = (EntityDbResponse<YouTubeApiSearchQueryViewModel>)result.Data!;
                     if (data != null)
                     {
                         await LoadData();
