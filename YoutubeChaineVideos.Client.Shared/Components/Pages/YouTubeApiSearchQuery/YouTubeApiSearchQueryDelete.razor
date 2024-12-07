@@ -1,0 +1,9 @@
+﻿<MudDialog>
+    <DialogContent>
+        @ContentMessageDelete
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Info" OnClick="Ok" Disabled="!Success || Errors.Count() > 0">@TitleOkButton</MudButton>
+        <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
