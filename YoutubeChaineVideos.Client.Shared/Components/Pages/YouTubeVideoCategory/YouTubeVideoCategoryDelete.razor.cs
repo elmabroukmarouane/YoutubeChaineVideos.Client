@@ -28,8 +28,6 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeVideoCategor
         [Inject]
         private BaseSettingsApp? BaseSettingsApp { get; set; }
 
-        protected override void OnInitialized() => Uri = BaseSettingsApp?.BaseUrlApiWebHttp + "VideoCategory";
-
         private void Cancel() => MudDialog?.Cancel();
 
         private async Task Ok()

@@ -28,8 +28,6 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiRemaining
         [Inject]
         private BaseSettingsApp? BaseSettingsApp { get; set; }
 
-        protected override void OnInitialized() => Uri = BaseSettingsApp?.BaseUrlApiWebHttp + "RemainingQuota";
-
         private void Cancel() => MudDialog?.Cancel();
 
         private async Task Ok()
