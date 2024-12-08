@@ -3,7 +3,6 @@
         <MudForm @ref="Form" @bind-IsValid="@Success" @bind-Errors="@Errors">
             <MudTextField Label="SearchQuery" Placeholder="Enter the value !" Required="true" RequiredError="Value is required!" @bind-Value=@YouTubeApiSearchQueryViewModel!.SearchQuery />
             <br />
-            <br />
             <MudCheckBox Label="is Active ?" Color="Color.Primary" @bind-Value=@YouTubeApiSearchQueryViewModel!.IsActive></MudCheckBox>
         </MudForm>
     </DialogContent>

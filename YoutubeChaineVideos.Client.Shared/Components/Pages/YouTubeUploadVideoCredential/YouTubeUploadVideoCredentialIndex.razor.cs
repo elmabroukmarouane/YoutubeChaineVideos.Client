@@ -10,10 +10,10 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using YoutubeChaineVideos.Client.Domain.Models;
 using YoutubeChaineVideos.Client.Domain.Models.Responses;
 
-namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiSearchQuery
+namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeUploadVideoCredential
 {
     //[Authorize]
-    public partial class YouTubeApiSearchQueryIndex : IComponent, IDisposable
+    public partial class YouTubeUploadVideoCredentialIndex : IComponent, IDisposable
     {
         [Inject]
         private IJSRuntime? JSRuntime { get; set; }
@@ -23,20 +23,20 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiSearchQue
         [Inject]
         ILocalStorageService? LocalStorageService { get; set; }
         [Inject]
-        protected IGenericService<YouTubeApiSearchQueryViewModel>? GenericService { get; set; }
+        protected IGenericService<YouTubeUploadVideoCredentialViewModel>? GenericService { get; set; }
         [Inject]
         TooltipService? TooltipService { get; set; }
         [Inject]
         private SweetAlertService? Swal { get; set; }
         private string TitleSwalTitle { get; set; } = string.Empty;
         private string MessageSwalTitle { get; set; } = string.Empty;
-        public static IList<YouTubeApiSearchQueryViewModel>? Items { get; set; }
+        public static IList<YouTubeUploadVideoCredentialViewModel>? Items { get; set; }
         public bool IsLoading { get; set; } = false;
         public int Count = 0;
         private RadzenFieldset? RadzenFieldsetUpload { get; set; }
         private RadzenFieldset? RadzenFieldsetDataGrid { get; set; }
-        private YouTubeApiSearchQueryViewModel SelectedItem { get; set; } = new();
-        private HashSet<YouTubeApiSearchQueryViewModel>? SelectedItems { get; set; }
+        private YouTubeUploadVideoCredentialViewModel SelectedItem { get; set; } = new();
+        private HashSet<YouTubeUploadVideoCredentialViewModel>? SelectedItems { get; set; }
         private bool IsUpdate { get; set; } = false;
         public string? TableSearchString { get; set; } = string.Empty;
         public string? Token { get; set; }
@@ -46,8 +46,8 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiSearchQue
         public string? Uri { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            TitleContent = BaseSettingsApp?.BaseTitleApp + " - YouTubeApiSearchQuerys";
-            Uri = BaseSettingsApp?.BaseUrlApiWebHttp + "SearchQuery";
+            TitleContent = BaseSettingsApp?.BaseTitleApp + " - YouTubeUploadVideoCredentials";
+            Uri = BaseSettingsApp?.BaseUrlApiWebHttp + "UploadVideoCredential";
             //Token = await LocalStorageService!.GetItemAsStringAsync("token");
             await LoadData();
         }
@@ -75,20 +75,22 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiSearchQue
             finally { IsLoading = false; }
         }
 
-        private bool FilterFunc1(YouTubeApiSearchQueryViewModel item) => GenericService!.FilterFunc(item, TableSearchString);
+        private bool FilterFunc1(YouTubeUploadVideoCredentialViewModel item) => FilterFunc(item);
+
+        private bool FilterFunc(YouTubeUploadVideoCredentialViewModel item) => GenericService!.FilterFunc(item, TableSearchString);
 
         private async Task ShowDialogAsync(
             string TitileDialog = "Add",
-            YouTubeApiSearchQueryViewModel? YouTubeApiSearchQueryViewModel = null,
+            YouTubeUploadVideoCredentialViewModel? YouTubeUploadVideoCredentialViewModel = null,
             bool isUpdate = false,
             string titleOkButton = "Add")
         {
             try
             {
-                var parameters = new DialogParameters<YouTubeApiSearchQueryAddUpdate>()
+                var parameters = new DialogParameters<YouTubeUploadVideoCredentialAddUpdate>()
                 {
                     {
-                        x => x.YouTubeApiSearchQueryViewModel, YouTubeApiSearchQueryViewModel ?? new YouTubeApiSearchQueryViewModel()
+                        x => x.YouTubeUploadVideoCredentialViewModel, YouTubeUploadVideoCredentialViewModel ?? new YouTubeUploadVideoCredentialViewModel()
                     },
                     {
                         x => x.TitleOkButton, titleOkButton
@@ -97,7 +99,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiSearchQue
                         x => x.IsUpdate, isUpdate
                     },
                     {
-                        x => x.Uri, BaseSettingsApp?.BaseUrlApiWebHttp + "SearchQuery"
+                        x => x.Uri, BaseSettingsApp?.BaseUrlApiWebHttp + "UploadVideoCredential"
                     },
                     {
                         x => x.Token, Token
@@ -105,12 +107,12 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiSearchQue
                 };
                 IsUpdate = isUpdate;
                 var options = new MudBlazor.DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
-                var dialog = await DialogService!.ShowAsync<YouTubeApiSearchQueryAddUpdate>(TitileDialog, parameters, options);
+                var dialog = await DialogService!.ShowAsync<YouTubeUploadVideoCredentialAddUpdate>(TitileDialog, parameters, options);
                 var result = await dialog.Result;
 
                 if (!result!.Canceled)
                 {
-                    var data = (EntityDbResponse<YouTubeApiSearchQueryViewModel>)result.Data!;
+                    var data = (EntityDbResponse<YouTubeUploadVideoCredentialViewModel>)result.Data!;
                     if (data != null)
                     {
                         await LoadData();
@@ -140,37 +142,37 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiSearchQue
         }
 
         private async Task ShowDeleteDialogAsync(
-            YouTubeApiSearchQueryViewModel? YouTubeApiSearchQueryViewModel = null,
+            YouTubeUploadVideoCredentialViewModel? YouTubeUploadVideoCredentialViewModel = null,
             string TitileDialog = "Delete",
             string titleOkButton = "Delete")
         {
             try
             {
-                var parameters = new DialogParameters<YouTubeApiSearchQueryDelete>()
+                var parameters = new DialogParameters<YouTubeUploadVideoCredentialDelete>()
                 {
                     {
                         x => x.ContentMessageDelete, "Are you sure to delete this row ?"
                     },
                     {
-                        x => x.YouTubeApiSearchQueryViewModel, YouTubeApiSearchQueryViewModel ?? new YouTubeApiSearchQueryViewModel()
+                        x => x.YouTubeUploadVideoCredentialViewModel, YouTubeUploadVideoCredentialViewModel ?? new YouTubeUploadVideoCredentialViewModel()
                     },
                     {
                         x => x.TitleOkButton, titleOkButton
                     },
                     {
-                        x => x.Uri, BaseSettingsApp?.BaseUrlApiWebHttp + "SearchQuery"
+                        x => x.Uri, BaseSettingsApp?.BaseUrlApiWebHttp + "UploadVideoCredential"
                     },
                     {
                         x => x.Token, Token
                     }
                 };
                 var options = new MudBlazor.DialogOptions() { CloseButton = true, BackdropClick = false };
-                var dialog = await DialogService!.ShowAsync<YouTubeApiSearchQueryDelete>(TitileDialog, parameters, options);
+                var dialog = await DialogService!.ShowAsync<YouTubeUploadVideoCredentialDelete>(TitileDialog, parameters, options);
                 var result = await dialog.Result;
 
                 if (!result!.Canceled)
                 {
-                    var data = (EntityDbResponse<YouTubeApiSearchQueryViewModel>)result.Data!;
+                    var data = (EntityDbResponse<YouTubeUploadVideoCredentialViewModel>)result.Data!;
                     if (data != null)
                     {
                         await LoadData();

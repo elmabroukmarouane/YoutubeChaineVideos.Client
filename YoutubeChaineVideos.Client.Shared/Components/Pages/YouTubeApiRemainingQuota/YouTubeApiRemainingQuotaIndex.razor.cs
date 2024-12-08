@@ -97,7 +97,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiRemaining
                         x => x.IsUpdate, isUpdate
                     },
                     {
-                        x => x.Uri, BaseSettingsApp?.BaseUrlApiWebHttp + "VideoCategory"
+                        x => x.Uri, BaseSettingsApp?.BaseUrlApiWebHttp + "RemainingQuota"
                     },
                     {
                         x => x.Token, Token
@@ -158,7 +158,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeApiRemaining
                         x => x.TitleOkButton, titleOkButton
                     },
                     {
-                        x => x.Uri, BaseSettingsApp?.BaseUrlApiWebHttp + "VideoCategory"
+                        x => x.Uri, BaseSettingsApp?.BaseUrlApiWebHttp + "RemainingQuota"
                     },
                     {
                         x => x.Token, Token

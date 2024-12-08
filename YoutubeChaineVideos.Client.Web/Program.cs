@@ -45,6 +45,7 @@ catch (Exception ex)
 builder.Services.AddTransient<IGenericService<YouTubeVideoCategoryViewModel>, GenericService<YouTubeVideoCategoryViewModel>>();
 builder.Services.AddTransient<IGenericService<YouTubeApiRemainingQuotaViewModel>, GenericService<YouTubeApiRemainingQuotaViewModel>>();
 builder.Services.AddTransient<IGenericService<YouTubeApiSearchQueryViewModel>, GenericService<YouTubeApiSearchQueryViewModel>>();
+builder.Services.AddTransient<IGenericService<YouTubeUploadVideoCredentialViewModel>, GenericService<YouTubeUploadVideoCredentialViewModel>>();
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddTransient<ITitleService, TitleService>();
