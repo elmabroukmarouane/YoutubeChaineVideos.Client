@@ -15,6 +15,11 @@
     <!-- Mud Blazor CSS -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <style>
+        body.sb-sidenav-toggled .sidebar {
+            display: none; /* Adjust this based on your layout */
+        }
+    </style>
 
 </head>
 
@@ -71,6 +76,12 @@
 
         function loginBackground() {
             document.body.classList.add("bg-primary");
+        }
+
+        function toogleSideBar() {
+            const body = document.body;
+            const isToggled = body.classList.toggle('sb-sidenav-toggled'); // Add/remove the class
+            localStorage.setItem('sb|sidebar-toggle', isToggled); // Update localStorage
         }
     </script>
 </body>
