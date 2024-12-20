@@ -1,0 +1,93 @@
+﻿@page "/channel-config-management.html"
+@using System.Text.Json
+<PageTitle>@TitleContent</PageTitle>
+
+<style>
+    .label-bold-summary {
+    font-weight: bold;
+    }
+</style>
+
+<div class="container-fluid px-4">
+    <TitleContent Title="YouTubeApiConfigs" />
+    <DescriptionCardContent>
+        This is the YouTubeApiConfigs module
+    </DescriptionCardContent>
+    <div class="card mb-4">
+        <TableHeader>
+            <i class="fas fa-table me-1"></i> YouTubeApiConfigs Table
+        </TableHeader>
+        <RadzenFieldset @ref="RadzenFieldsetUpload" AllowCollapse="true" class="m-2">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="upload_file" class="me-1" /><b>Add</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard>
+                    <RadzenButton class="mb-4" Icon="add" ButtonStyle="ButtonStyle.Primary" Text="Add" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Add"))" Click="@(e => ShowDialogAsync())" Disabled="@IsUpdate" />
+                </RadzenCard>
+            </ChildContent>
+            <SummaryTemplate>
+                <RadzenCard class="m-2">
+                    <label class="label-bold-summary">Click on + to show ADD Button</label>
+                </RadzenCard>
+            </SummaryTemplate>
+        </RadzenFieldset>
+        <RadzenFieldset @ref="RadzenFieldsetDataGrid" AllowCollapse="true" class="mb-2 ms-2 me-2">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="category" class="me-1" /><b>YouTubeApiConfigs List</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                <MudTable Items="@Items" FixedHeader="true" Dense="true" Hover="true" Bordered="false" Striped="true" Loading="@IsLoading" Filter="new Func<YouTubeApiConfigViewModel,bool>(FilterFunc1)" @bind-SelectedItem="SelectedItem" MultiSelection="true" SelectionChangeable="true" @bind-SelectedItems="SelectedItems">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Items List</MudText>
+                        <MudSpacer />
+                        <MudTextField @bind-Value="TableSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.YouTubeApiChannelViewModel?.ChannelName!)">Channel Name</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.ApiKey!)">API Key</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.MaxResults!.ToString()!)">Max Results</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.DailyQuota!.ToString()!)">Daily Quota</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.DurationQuota!.ToString()!)">Duration Quota</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.SearchCost!.ToString()!)">Search Cost</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.SearchTagsCost!.ToString()!)">Search Tags Cost</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.CreatedBy!)">Created By</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.CreateDate!.ToString()!)">Created Date</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.UpdatedBy!)">Updated By</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiConfigViewModel, string>(x => x?.UpdateDate!.ToString()!)">Updated Date</MudTableSortLabel></MudTh>
+                        <MudTh>Actions</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="ChannelName">@context.YouTubeApiChannelViewModel?.ChannelName</MudTd>
+                        <MudTd DataLabel="ApiKey">@context.ApiKey</MudTd>
+                        <MudTd DataLabel="MaxResults">@context.MaxResults</MudTd>
+                        <MudTd DataLabel="DailyQuota">@context.DailyQuota</MudTd>
+                        <MudTd DataLabel="DurationQuota">@context.DurationQuota</MudTd>
+                        <MudTd DataLabel="SearchCost">@context.SearchCost</MudTd>
+                        <MudTd DataLabel="SearchTagsCost">@context.SearchTagsCost</MudTd>
+                        <MudTd DataLabel="CreatedBy">@context.CreatedBy</MudTd>
+                        <MudTd DataLabel="CreateDate">@context.CreateDate.ToString()</MudTd>
+                        <MudTd DataLabel="UpdatedBy">@context.UpdatedBy</MudTd>
+                        <MudTd DataLabel="UpdateDate">@context.UpdateDate.ToString()</MudTd>
+                        <MudTd>
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Update"))" Click="@(e => ShowDialogAsync("Update", context, true, "Update"))" />
+                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Delete"))" Click="@(e => ShowDeleteDialogAsync(context))" />
+                        </MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            </ChildContent>
+            <SummaryTemplate>
+                <RadzenCard class="mb-2 ms-2 me-2">
+                    <label class="label-bold-summary">@Count Videos @(Count > 1 ? "YouTubeApiConfigs" : "YouTubeApiConfig")</label>
+                </RadzenCard>
+            </SummaryTemplate>
+        </RadzenFieldset>
+    </div>
+</div>

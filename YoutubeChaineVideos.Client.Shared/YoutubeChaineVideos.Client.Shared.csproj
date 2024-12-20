@@ -26,6 +26,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Components\Pages\YouTubeApiConfig\YouTubeApiConfigAddUpdate.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Components\Pages\YouTubeApiConfig\YouTubeApiConfigDelete.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Components\Pages\YouTubeApiConfig\YouTubeApiConfigIndex.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Update="Components\Pages\YouTubeVideoCategory\YouTubeVideoCategoryDelete.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
