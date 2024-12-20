@@ -1,0 +1,33 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="Form" @bind-IsValid="@Success" @bind-Errors="@Errors">
+            <MudAutocomplete T="YouTubeApiChannelViewModel"
+                             Label="YouTube Channel"
+                             Placeholder="Type to search..."
+                             @bind-Value="SelectedYouTubeApiChannelViewModel"
+                             ToStringFunc="GetDisplayName"
+                             CoerceValue="true"
+                             ResetValueOnEmptyText="true"
+                             SearchFunc="SearchYouTubeApiChannelViewModelsAsync"
+                             Required="true"
+                             RequiredError="Value is required!">
+            </MudAutocomplete>
+            <br />
+            <MudTextField Label="API Key" Placeholder="Enter the value !" Required="true" RequiredError="Value is required!" @bind-Value=@YouTubeApiConfigViewModel!.ApiKey />
+            <br />
+            <MudTextField Label="Max Results" Placeholder="Enter the value !" InputType="InputType.Number" Required="true" RequiredError="Value is required!" @bind-Value=@YouTubeApiConfigViewModel!.MaxResults />
+            <br />
+            <MudTextField Label="Daily Quota" Placeholder="Enter the value !" InputType="InputType.Number" Required="true" RequiredError="Value is required!" @bind-Value=@YouTubeApiConfigViewModel!.DailyQuota />
+            <br />
+            <MudTextField Label="Duration Quota" Placeholder="Enter the value !" InputType="InputType.Number" Required="true" RequiredError="Value is required!" @bind-Value=@YouTubeApiConfigViewModel!.DurationQuota />
+            <br />
+            <MudTextField Label="Search Cost" Placeholder="Enter the value !" InputType="InputType.Number" Required="true" RequiredError="Value is required!" @bind-Value=@YouTubeApiConfigViewModel!.SearchCost />
+            <br />
+            <MudTextField Label="Search Tags Cost" Placeholder="Enter the value !" InputType="InputType.Number" Required="true" RequiredError="Value is required!" @bind-Value=@YouTubeApiConfigViewModel!.SearchTagsCost />
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Info" OnClick="Ok" Disabled="!Success || Errors.Count() > 0">@TitleOkButton</MudButton>
+        <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
