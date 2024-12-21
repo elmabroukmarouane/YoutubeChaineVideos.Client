@@ -1,4 +1,4 @@
-﻿@page "/search-youtube-videos.html"
+﻿@page "/download-youtube-videos.html"
 @using System.Text.Json
 <PageTitle>@TitleContent</PageTitle>
 
@@ -11,7 +11,7 @@
 <div class="container-fluid px-4">
     <TitleContent Title="Videos" />
     <DescriptionCardContent>
-        This is the Searched Videos module
+        This is the Downloaded Videos module
     </DescriptionCardContent>
     <div class="card mb-4">
         <TableHeader>
@@ -20,19 +20,19 @@
         <RadzenFieldset @ref="RadzenFieldsetUpload" AllowCollapse="true" class="m-2">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
-                    <RadzenIcon Icon="upload_file" class="me-1" /><b>Search</b>
+                    <RadzenIcon Icon="upload_file" class="me-1" /><b>Download</b>
                 </span>
             </HeaderTemplate>
             <ChildContent>
                 <RadzenCard>
-                    <RadzenButton class="mb-4" Icon="search" ButtonStyle="ButtonStyle.Primary" Text="Search" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Search"))" Click="@(e => ShowDialogAsync())" />
+                    <RadzenButton class="mb-4" Icon="download" ButtonStyle="ButtonStyle.Primary" Text="Download" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Download Videos"))" Click="@(e => ShowDownloadVideosDialogAsync(TitileDialog: "Download Videos", titleOkButton: "Download"))" />
                     <RadzenButton class="mb-4" Icon="clear" ButtonStyle="ButtonStyle.Primary" Text="Clear" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Clear Download Folders"))" Click="@(e => ShowClearFoldersDialogAsync(TitileDialog: "Clear Download Folders", titleOkButton: "Clear"))" />
                     <RadzenButton class="mb-4" Icon="clear" ButtonStyle="ButtonStyle.Primary" Text="Tuncate Table" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Truncate Table"))" Click="@(e => ShowTruncateTableDialogAsync(TitileDialog: "Truncate Table", titleOkButton: "Truncate"))" />
                 </RadzenCard>
             </ChildContent>
             <SummaryTemplate>
                 <RadzenCard class="m-2">
-                    <label class="label-bold-summary">Click on + to show SEARCH Button</label>
+                    <label class="label-bold-summary">Click on + to show DOWNLOAD Button</label>
                 </RadzenCard>
             </SummaryTemplate>
         </RadzenFieldset>

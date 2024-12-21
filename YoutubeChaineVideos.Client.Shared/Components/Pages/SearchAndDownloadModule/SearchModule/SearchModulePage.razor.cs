@@ -5,15 +5,13 @@ using YoutubeChaineVideos.Client.Busines.Services.Interface;
 using YoutubeChaineVideos.Client.Domain.Models.Settings;
 using YoutubeChaineVideos.Client.Domain.Models.Requests;
 using YoutubeChaineVideos.Client.Domain.Models.Responses;
-using CurrieTechnologies.Razor.SweetAlert2;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Radzen;
 
 namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.SearchModule
 {
     public partial class SearchModulePage : ComponentBase
     {
-        private bool isLoading {  get; set; }
+        private bool IsLoading {  get; set; }
         private bool Success { get; set; } = true;
         private string[] Errors { get; set; } = [];
         private MudForm? Form { get; set; }
@@ -76,17 +74,25 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
 
             if (SearchAddVideosRequest == null)
             {
-                // Log or handle the null scenario
-                return;
+                MudDialog?.Close(DialogResult.Ok(new EntityDbResponse<VideoViewModel>()
+                {
+                    IsSuccess = false,
+                    MessageStatus = new MessageStatus()
+                    {
+                        StatusCode = System.Net.HttpStatusCode.InternalServerError,
+                        Message = "Search request is required !"
+                    },
+                    Entity = null
+                }));
             }
 
-            isLoading = true;
+            IsLoading = true;
 
             var entity = await VideoService!.SearchAddVideos(Uri!, Token, SearchAddVideosRequest!);
             if (Success || Errors.Length <= 0)
             {
-                isLoading = false;
-                if (entity is not null && entity.StatusCode == System.Net.HttpStatusCode.OK)
+                IsLoading = false;
+                if (entity is not null)
                 {
                     MudDialog?.Close(DialogResult.Ok(new EntityDbResponse<VideoViewModel>()
                     {
