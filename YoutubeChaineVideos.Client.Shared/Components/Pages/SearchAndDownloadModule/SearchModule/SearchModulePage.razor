@@ -1,0 +1,38 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="Form" @bind-IsValid="@Success" @bind-Errors="@Errors">
+            <MudAutocomplete T="YouTubeApiChannelViewModel"
+                             Label="YouTube Channel"
+                             Placeholder="Type to search..."
+                             @bind-Value="SelectedYouTubeApiChannelViewModel"
+                             ToStringFunc="GetDisplayName"
+                             CoerceValue="true"
+                             ResetValueOnEmptyText="true"
+                             SearchFunc="SearchYouTubeApiChannelViewModelsAsync"
+                             Required="true"
+                             RequiredError="Value is required!"
+                             Clearable="true">
+            </MudAutocomplete>
+            <br />
+            <MudTextField Label="Search Query" Placeholder="Enter the value !" Required="true" RequiredError="Value is required!" @bind-Value=@QuerySearch />
+            <br />
+            <MudTextField Label="Max Results" Placeholder="Enter the value !" InputType="InputType.Number" Required="true" RequiredError="Value is required!" @bind-Value=@MaxResults />
+            <br />
+            <MudSelect T="string" Label="Video Type" Placeholder="Select a value !" @bind-Value=@VideoType Clearable="true">
+                <MudSelectItem Value="@("video")" />
+                <MudSelectItem Value="@("channel")" />
+                <MudSelectItem Value="@("playlist")" />
+            </MudSelect>
+            <br />
+            @* <MudCheckBox Label="Get recent videos ?" Color="Color.Primary" @bind-Value=@GetRecentVideos></MudCheckBox> *@
+            <MudSwitch @bind-Value="GetRecentVideos" Label="Get recent videos ?" Color="Color.Success" UncheckedColor="Color.Error" />
+        </MudForm>
+        <div style="text-align: center; @(isLoading ? "display: block;" : "display: none;")">
+            <MudImage Src="_content/YoutubeChaineVideos.Client.Shared/assets/img/loading.svg" Alt="Loading..." />
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Info" OnClick="Ok" Disabled="!Success || Errors.Count() > 0">@TitleOkButton</MudButton>
+        <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>

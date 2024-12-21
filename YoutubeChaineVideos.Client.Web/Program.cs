@@ -48,6 +48,8 @@ builder.Services.AddTransient<IGenericService<YouTubeApiSearchQueryViewModel>, G
 builder.Services.AddTransient<IGenericService<YouTubeUploadVideoCredentialViewModel>, GenericService<YouTubeUploadVideoCredentialViewModel>>();
 builder.Services.AddTransient<IGenericService<YouTubeApiChannelViewModel>, GenericService<YouTubeApiChannelViewModel>>();
 builder.Services.AddTransient<IGenericService<YouTubeApiConfigViewModel>, GenericService<YouTubeApiConfigViewModel>>();
+builder.Services.AddTransient<IGenericService<VideoViewModel>, GenericService<VideoViewModel>>();
+builder.Services.AddTransient<IVideoService, VideoService>();
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddTransient<ITitleService, TitleService>();
