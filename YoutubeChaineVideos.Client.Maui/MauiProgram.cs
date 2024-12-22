@@ -40,7 +40,7 @@ namespace YoutubeChaineVideos.Client.Maui
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
-            Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Development");
+            //Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Development");
 #endif
             try
             {
