@@ -18,6 +18,14 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Interface
         Task<MessageStatus> ClearAndEmptyVideosAudiosOutputFolders(string uri, string? token);
         #endregion
 
+        #region EDITING VIDEOS IN DB
+        Task<VideoViewModel?> EditingVideos(string uri, string? token, EditingVideosRequest editingVideosRequest);
+        #endregion
+
+        #region UPLOAD VIDEOS TO YOUTUBE
+        Task<MessageStatus> UploadVideosToYouTube(string uri, string? token);
+        #endregion
+
         #region TRUNCATE VIDEOS TABLE
         Task<MessageStatus> Truncate(string uri, string? token);
         #endregion

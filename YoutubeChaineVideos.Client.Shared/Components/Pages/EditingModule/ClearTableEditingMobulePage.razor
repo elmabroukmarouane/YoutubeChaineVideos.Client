@@ -1,0 +1,14 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="Form" @bind-IsValid="@Success" @bind-Errors="@Errors">
+            <MudSwitch @bind-Value="IsSqlite" Label="Is SQLite ?" Color="Color.Success" UncheckedColor="Color.Error" />
+        </MudForm>
+        <div style="text-align: center; @(IsLoading ? "display: block;" : "display: none;")">
+            <MudImage Src="_content/YoutubeChaineVideos.Client.Shared/assets/img/loading.svg" Alt="Loading..." />
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Info" OnClick="Ok" Disabled="!Success || Errors.Count() > 0 || IsLoading">@TitleOkButton</MudButton>
+        <MudButton Color="Color.Error" OnClick="Cancel" Disabled="IsLoading">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>

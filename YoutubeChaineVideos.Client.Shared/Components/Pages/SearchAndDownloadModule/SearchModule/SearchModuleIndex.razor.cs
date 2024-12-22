@@ -11,7 +11,6 @@ using YoutubeChaineVideos.Client.Domain.Models;
 using YoutubeChaineVideos.Client.Domain.Models.Responses;
 using YoutubeChaineVideos.Client.Domain.Models.LambdaManagement.Models;
 using YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.ClearFoldersModule;
-using YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.DownloadModule;
 using YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.ClearTableMobule;
 
 namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.SearchModule
@@ -67,14 +66,15 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
             try
             {
                 IsLoading = true;
+                Items = null;
                 var filterDataModel = new FilterDataModel()
                 {
                     LambdaExpressionModel = new LambdaExpressionModel()
                     {
                         RootGroup = new ConditionGroupModel()
                         {
-                            Conditions = new List<ConditionModel>()
-                            {
+                            Conditions =
+                            [
                                 //new ConditionModel()
                                 //{
                                 //    PropertyName = "IsDownloaded",
@@ -93,19 +93,22 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
                                     ComparisonValue = null,
                                     ComparisonType = "IsFalse"
                                 }
-                            }
+                            ]
                         }
                     }
                 };
                 Items = await GenericService!.GetEntitiesAsync($"{Uri!}/filter", Token, filterDataModel);
                 Items = Items?.OrderByDescending(x => x.Id).ToList();
-                Count = Items != null ? Items.Count : 0;
+                Count = Items?.Count ?? 0;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
             }
-            finally { IsLoading = false; }
+            finally 
+            { 
+                IsLoading = false;
+            }
         }
 
         private bool FilterFunc1(VideoViewModel item) => GenericService!.FilterFunc(item, TableSearchString);

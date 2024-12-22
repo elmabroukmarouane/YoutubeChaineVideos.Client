@@ -10,13 +10,11 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using YoutubeChaineVideos.Client.Domain.Models;
 using YoutubeChaineVideos.Client.Domain.Models.Responses;
 using YoutubeChaineVideos.Client.Domain.Models.LambdaManagement.Models;
-using YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.ClearFoldersModule;
-using YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.ClearTableMobule;
 
-namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.DownloadModule
+namespace YoutubeChaineVideos.Client.Shared.Components.Pages.EditingModule
 {
     //[Authorize]
-    public partial class DownloadModuleIndex : IComponent, IDisposable
+    public partial class EditingModuleIndex : IComponent, IDisposable
     {
         [Inject]
         private IJSRuntime? JSRuntime { get; set; }
@@ -40,7 +38,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
         private RadzenFieldset? RadzenFieldsetDataGrid { get; set; }
         private VideoViewModel SelectedItem { get; set; } = new();
         private HashSet<VideoViewModel>? SelectedItems { get; set; }
-        public string? TableSearchString { get; set; } = string.Empty;
+        public string? TableEditingString { get; set; } = string.Empty;
         public string? Token { get; set; }
         [Inject]
         IDialogService? DialogService { get; set; }
@@ -48,8 +46,8 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
         public string? Uri { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            TitleContent = BaseSettingsApp?.BaseTitleApp + " - Download Youtube Videos";
-            Uri = BaseSettingsApp?.BaseUrlApiWebHttp + "Video";
+            TitleContent = BaseSettingsApp?.BaseTitleApp + " - Editing Youtube Videos";
+            Uri = $"{BaseSettingsApp?.BaseUrlApiWebHttp}EditingVideo";
             //Token = await LocalStorageService!.GetItemAsStringAsync("token");
             await LoadData();
         }
@@ -66,6 +64,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
             try
             {
                 IsLoading = true;
+                Items = null;
                 var filterDataModel = new FilterDataModel()
                 {
                     LambdaExpressionModel = new LambdaExpressionModel()
@@ -84,7 +83,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
                                 {
                                     PropertyName = "IsEdited",
                                     ComparisonValue = null,
-                                    ComparisonType = "IsFalse"
+                                    ComparisonType = "IsTrue"
                                 },
                                 new ConditionModel()
                                 {
@@ -98,89 +97,40 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
                 };
                 Items = await GenericService!.GetEntitiesAsync($"{Uri!}/filter", Token, filterDataModel);
                 Items = Items?.OrderByDescending(x => x.Id).ToList();
-                Count = Items != null ? Items.Count : 0;
+                Count = Items?.Count ?? 0;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
             }
-            finally { IsLoading = false; }
+            finally 
+            { 
+                IsLoading = false;
+            }
         }
 
-        private bool FilterFunc1(VideoViewModel item) => GenericService!.FilterFunc(item, TableSearchString);
-        
-        private async Task ShowClearFoldersDialogAsync(
-            string TitileDialog = "Search",
-            string titleOkButton = "Search")
+        private bool FilterFunc1(VideoViewModel item) => GenericService!.FilterFunc(item, TableEditingString);
+
+        private async Task ShowDialogAsync(
+            string TitileDialog = "Editing",
+            string titleOkButton = "Editing")
         {
             try
             {
-                var parameters = new DialogParameters<ClearFoldersModulePage>()
+                var parameters = new DialogParameters<EditingModulePage>()
                 {
                     {
                         x => x.TitleOkButton, titleOkButton
                     },
                     {
-                        x => x.Uri, $"{Uri!}/ClearAndEmptyVideosAudiosOutputFolders"
+                        x => x.Uri, $"{BaseSettingsApp?.BaseUrlApiWebHttp}EditingVideo/EditYouTubeVideos"
                     },
                     {
                         x => x.Token, Token
                     }
                 };
                 var options = new MudBlazor.DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
-                var dialog = await DialogService!.ShowAsync<ClearFoldersModulePage>(TitileDialog, parameters, options);
-                var result = await dialog.Result;
-
-                if (!result!.Canceled)
-                {
-                    var data = (MessageStatus)result.Data!;
-                    if (data != null)
-                    {
-                        await LoadData();
-                        await Swal!.FireAsync(new SweetAlertOptions()
-                        {
-                            Title = titleOkButton,
-                            Text = data.Message,
-                            Icon = data.StatusCode == System.Net.HttpStatusCode.OK ? SweetAlertIcon.Success : SweetAlertIcon.Error
-                        });
-                    }
-                }
-                else
-                {
-                    await Swal!.FireAsync(new SweetAlertOptions()
-                    {
-                        Title = titleOkButton,
-                        Text = "Operation Canceled !",
-                        Icon = SweetAlertIcon.Warning
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message, ex);
-            }
-        }
-
-        private async Task ShowDownloadVideosDialogAsync(
-            string TitileDialog = "Search",
-            string titleOkButton = "Search")
-        {
-            try
-            {
-                var parameters = new DialogParameters<DownloadModulePage>()
-                {
-                    {
-                        x => x.TitleOkButton, titleOkButton
-                    },
-                    {
-                        x => x.Uri, $"{Uri!}/DownloadUpdateVideos"
-                    },
-                    {
-                        x => x.Token, Token
-                    }
-                };
-                var options = new MudBlazor.DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
-                var dialog = await DialogService!.ShowAsync<DownloadModulePage>(TitileDialog, parameters, options);
+                var dialog = await DialogService!.ShowAsync<EditingModulePage>(TitileDialog, parameters, options);
                 var result = await dialog.Result;
 
                 if (!result!.Canceled)
@@ -213,13 +163,65 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
             }
         }
 
-        private async Task ShowTruncateTableDialogAsync(
-            string TitileDialog = "Search",
-            string titleOkButton = "Search")
+        private async Task ShowClearFoldersDialogAsync(
+            string TitileDialog = "Editing",
+            string titleOkButton = "Editing")
         {
             try
             {
-                var parameters = new DialogParameters<ClearTableMobulePage>()
+                var parameters = new DialogParameters<ClearEditingFoldersModulePage>()
+                {
+                    {
+                        x => x.TitleOkButton, titleOkButton
+                    },
+                    {
+                        x => x.Uri, $"{BaseSettingsApp?.BaseUrlApiWebHttp}EditingVideo/ClearAndEmptyEditedVideosOutputFolders"
+                    },
+                    {
+                        x => x.Token, Token
+                    }
+                };
+                var options = new MudBlazor.DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
+                var dialog = await DialogService!.ShowAsync<ClearEditingFoldersModulePage>(TitileDialog, parameters, options);
+                var result = await dialog.Result;
+
+                if (!result!.Canceled)
+                {
+                    var data = (MessageStatus)result.Data!;
+                    if (data != null)
+                    {
+                        await LoadData();
+                        await Swal!.FireAsync(new SweetAlertOptions()
+                        {
+                            Title = titleOkButton,
+                            Text = data.Message,
+                            Icon = data.StatusCode == System.Net.HttpStatusCode.OK ? SweetAlertIcon.Success : SweetAlertIcon.Error
+                        });
+                    }
+                }
+                else
+                {
+                    await Swal!.FireAsync(new SweetAlertOptions()
+                    {
+                        Title = titleOkButton,
+                        Text = "Operation Canceled !",
+                        Icon = SweetAlertIcon.Warning
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        private async Task ShowTruncateTableDialogAsync(
+            string TitileDialog = "Editing",
+            string titleOkButton = "Editing")
+        {
+            try
+            {
+                var parameters = new DialogParameters<ClearTableEditingMobulePage>()
                 {
                     {
                         x => x.TitleOkButton, titleOkButton
@@ -232,7 +234,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
                     }
                 };
                 var options = new MudBlazor.DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
-                var dialog = await DialogService!.ShowAsync<ClearTableMobulePage>(TitileDialog, parameters, options);
+                var dialog = await DialogService!.ShowAsync<ClearTableEditingMobulePage>(TitileDialog, parameters, options);
                 var result = await dialog.Result;
 
                 if (!result!.Canceled)
