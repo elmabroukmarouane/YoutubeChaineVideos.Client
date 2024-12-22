@@ -41,37 +41,44 @@
                 </span>
             </HeaderTemplate>
             <ChildContent>
-                <MudTable Items="@Items" FixedHeader="true" Dense="true" Hover="true" Bordered="false" Striped="true" Loading="@IsLoading" Filter="new Func<YouTubeVideoCategoryViewModel,bool>(FilterFunc1)" @bind-SelectedItem="SelectedItem" MultiSelection="true" SelectionChangeable="true" @bind-SelectedItems="SelectedItems">
-                    <ToolBarContent>
-                        <MudText Typo="Typo.h6">Items List</MudText>
-                        <MudSpacer />
-                        <MudTextField @bind-Value="TableSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                    </ToolBarContent>
-                    <HeaderContent>
-                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CategoryId!.ToString()!)">Video Category ID</MudTableSortLabel></MudTh>
-                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CategoryName!)">Video Category Name</MudTableSortLabel></MudTh>
-                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CreatedBy!)">Created By</MudTableSortLabel></MudTh>
-                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CreateDate!.ToString()!)">Created Date</MudTableSortLabel></MudTh>
-                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.UpdatedBy!)">Updated By</MudTableSortLabel></MudTh>
-                        <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.UpdateDate!.ToString()!)">Updated Date</MudTableSortLabel></MudTh>
-                        <MudTh>Actions</MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd DataLabel="Video Category ID">@context.CategoryId</MudTd>
-                        <MudTd DataLabel="Video Category Name">@context.CategoryName</MudTd>
-                        <MudTd DataLabel="CreatedBy">@context.CreatedBy</MudTd>
-                        <MudTd DataLabel="CreateDate">@context.CreateDate.ToString()</MudTd>
-                        <MudTd DataLabel="UpdatedBy">@context.UpdatedBy</MudTd>
-                        <MudTd DataLabel="UpdateDate">@context.UpdateDate.ToString()</MudTd>
-                        <MudTd>
-                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Update"))" Click="@(e => ShowDialogAsync("Update", context, true, "Update"))" />
-                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Delete"))" Click="@(e => ShowDeleteDialogAsync(context))" />
-                        </MudTd>
-                    </RowTemplate>
-                    <PagerContent>
-                        <MudTablePager />
-                    </PagerContent>
-                </MudTable>
+                @if (IsLoading)
+                {
+                    <LoadingPage />
+                }
+                else 
+                {
+                    <MudTable Items="@Items" FixedHeader="true" Dense="true" Hover="true" Bordered="false" Striped="true" Filter="new Func<YouTubeVideoCategoryViewModel,bool>(FilterFunc1)" @bind-SelectedItem="SelectedItem" MultiSelection="true" SelectionChangeable="true" @bind-SelectedItems="SelectedItems">
+                        <ToolBarContent>
+                            <MudText Typo="Typo.h6">Items List</MudText>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="TableSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CategoryId!.ToString()!)">Video Category ID</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CategoryName!)">Video Category Name</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CreatedBy!)">Created By</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.CreateDate!.ToString()!)">Created Date</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.UpdatedBy!)">Updated By</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<YouTubeVideoCategoryViewModel, string>(x => x?.UpdateDate!.ToString()!)">Updated Date</MudTableSortLabel></MudTh>
+                            <MudTh>Actions</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Video Category ID">@context.CategoryId</MudTd>
+                            <MudTd DataLabel="Video Category Name">@context.CategoryName</MudTd>
+                            <MudTd DataLabel="CreatedBy">@context.CreatedBy</MudTd>
+                            <MudTd DataLabel="CreateDate">@context.CreateDate.ToString()</MudTd>
+                            <MudTd DataLabel="UpdatedBy">@context.UpdatedBy</MudTd>
+                            <MudTd DataLabel="UpdateDate">@context.UpdateDate.ToString()</MudTd>
+                            <MudTd>
+                                <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Update"))" Click="@(e => ShowDialogAsync("Update", context, true, "Update"))" />
+                                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Delete"))" Click="@(e => ShowDeleteDialogAsync(context))" />
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager />
+                        </PagerContent>
+                    </MudTable>
+                }
             </ChildContent>
             <SummaryTemplate>
                 <RadzenCard class="mb-2 ms-2 me-2">

@@ -1,4 +1,4 @@
-﻿@page "/search-youtube-videos.html"
+﻿@page "/upload-youtube-videos.html"
 @using System.Text.Json
 <PageTitle>@TitleContent</PageTitle>
 
@@ -11,7 +11,7 @@
 <div class="container-fluid px-4">
     <TitleContent Title="Videos" />
     <DescriptionCardContent>
-        This is the Searched Videos module
+        This is the Edited Videos module
     </DescriptionCardContent>
     <div class="card mb-4">
         <TableHeader>
@@ -20,19 +20,18 @@
         <RadzenFieldset @ref="RadzenFieldsetUpload" AllowCollapse="true" class="m-2">
             <HeaderTemplate>
                 <span class="d-inline-flex align-items-center align-middle">
-                    <RadzenIcon Icon="upload_file" class="me-1" /><b>Search</b>
+                    <RadzenIcon Icon="upload_file" class="me-1" /><b>Upload</b>
                 </span>
             </HeaderTemplate>
             <ChildContent>
                 <RadzenCard>
-                    <RadzenButton class="mb-4" Icon="search" ButtonStyle="ButtonStyle.Primary" Text="Search" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Search"))" Click="@(e => ShowDialogAsync())" />
-                    <RadzenButton class="mb-4" Icon="clear" ButtonStyle="ButtonStyle.Primary" Text="Clear" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Clear Download Folders"))" Click="@(e => ShowClearFoldersDialogAsync(TitileDialog: "Clear Download Folders", titleOkButton: "Clear"))" />
+                    <RadzenButton class="mb-4" Icon="cloud_upload" ButtonStyle="ButtonStyle.Primary" Text="Upload" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Upload"))" Click="@(e => ShowDialogAsync())" />
                     <RadzenButton class="mb-4" Icon="clear" ButtonStyle="ButtonStyle.Primary" Text="Tuncate Table" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Truncate Table"))" Click="@(e => ShowTruncateTableDialogAsync(TitileDialog: "Truncate Table", titleOkButton: "Truncate"))" />
                 </RadzenCard>
             </ChildContent>
             <SummaryTemplate>
                 <RadzenCard class="m-2">
-                    <label class="label-bold-summary">Click on + to show SEARCH Button</label>
+                    <label class="label-bold-summary">Click on + to show UPLOAD Button</label>
                 </RadzenCard>
             </SummaryTemplate>
         </RadzenFieldset>
@@ -53,10 +52,10 @@
                         <ToolBarContent>
                             <MudText Typo="Typo.h6">Items List</MudText>
                             <MudSpacer />
-                            <MudTextField @bind-Value="TableSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            <MudTextField @bind-Value="TableUploadString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                         </ToolBarContent>
                         <HeaderContent>
-                            <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.IsDownloaded?.ToString()!)">IsDownloaded ?</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.IsUploaded?.ToString()!)">IsUploaded ?</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.VideoId!)">Video ID</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.CategoryId!)">Category ID</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.Title!)">Title</MudTableSortLabel></MudTh>
@@ -65,13 +64,14 @@
                             <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.Tags!)">TAGS</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.ChannelId!)">Channel ID</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.ChannelTitle!)">Channel Title</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.Duration!.ToString()!)">Duration</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.CreateDate!.ToString()!)">Created Date</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.UpdatedBy!)">Updated By</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<VideoViewModel, string>(x => x?.UpdateDate!.ToString()!)">Updated Date</MudTableSortLabel></MudTh>
                         </HeaderContent>
                         <RowTemplate>
-                            <MudTd DataLabel="IsDownloaded">
-                                <MudCheckBox Disabled="true" Color="Color.Primary" @bind-Value=@context!.IsDownloaded></MudCheckBox>
+                            <MudTd DataLabel="IsUploaded">
+                                <MudCheckBox Disabled="true" Color="Color.Primary" @bind-Value=@context!.IsUploaded></MudCheckBox>
                             </MudTd>
                             <MudTd DataLabel="VideoId">@context.VideoId</MudTd>
                             <MudTd DataLabel="CategoryId">@context.CategoryId</MudTd>
@@ -81,6 +81,7 @@
                             <MudTd DataLabel="Tags">@context.Tags</MudTd>
                             <MudTd DataLabel="ChannelId">@context.ChannelId</MudTd>
                             <MudTd DataLabel="ChannelTitle">@context.ChannelTitle</MudTd>
+                            <MudTd DataLabel="Duration">@context.Duration</MudTd>
                             <MudTd DataLabel="CreatedBy">@context.CreatedBy</MudTd>
                             <MudTd DataLabel="CreateDate">@context.CreateDate.ToString()</MudTd>
                             <MudTd DataLabel="UpdatedBy">@context.UpdatedBy</MudTd>

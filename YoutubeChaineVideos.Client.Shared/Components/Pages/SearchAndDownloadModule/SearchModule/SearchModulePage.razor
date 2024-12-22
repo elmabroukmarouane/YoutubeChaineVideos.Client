@@ -11,20 +11,21 @@
                              SearchFunc="SearchYouTubeApiChannelViewModelsAsync"
                              Required="true"
                              RequiredError="Value is required!"
-                             Clearable="true">
+                             Clearable="true"
+                             Disabled="IsLoading">
             </MudAutocomplete>
             <br />
-            <MudTextField Label="Search Query" Placeholder="Enter the value !" Required="true" RequiredError="Value is required!" @bind-Value=@QuerySearch />
+            <MudTextField Label="Search Query" Placeholder="Enter the value !" Required="true" RequiredError="Value is required!" Disabled="IsLoading" @bind-Value=@QuerySearch />
             <br />
-            <MudTextField Label="Max Results" Placeholder="Enter the value !" InputType="InputType.Number" Required="true" RequiredError="Value is required!" @bind-Value=@MaxResults />
+            <MudTextField Label="Max Results" Placeholder="Enter the value !" InputType="InputType.Number" Required="true" RequiredError="Value is required!" Disabled="IsLoading" @bind-Value=@MaxResults />
             <br />
-            <MudSelect T="string" Label="Video Type" Placeholder="Select a value !" @bind-Value=@VideoType Clearable="true">
+            <MudSelect T="string" Label="Video Type" Placeholder="Select a value !" @bind-Value=@VideoType Clearable="true" Disabled="IsLoading">
                 <MudSelectItem Value="@("video")" />
                 <MudSelectItem Value="@("channel")" />
                 <MudSelectItem Value="@("playlist")" />
             </MudSelect>
             <br />
-            <MudSwitch @bind-Value="GetRecentVideos" Label="Get recent videos ?" Color="Color.Success" UncheckedColor="Color.Error" />
+            <MudSwitch @bind-Value="GetRecentVideos" Label="Get recent videos ?" Color="Color.Success" UncheckedColor="Color.Error" Disabled="IsLoading" />
         </MudForm>
         <div style="text-align: center; @(IsLoading ? "display: block;" : "display: none;")">
             <MudImage Src="_content/YoutubeChaineVideos.Client.Shared/assets/img/loading.svg" Alt="Loading..." />

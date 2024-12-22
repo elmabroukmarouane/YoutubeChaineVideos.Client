@@ -1,0 +1,11 @@
+﻿<MudDialog>
+    <DialogContent>
+        <div style="text-align: center; @(IsLoading ? "display: block;" : "display: none;")">
+            <MudImage Src="_content/YoutubeChaineVideos.Client.Shared/assets/img/loading.svg" Alt="Loading..." />
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Info" OnClick="Ok" Disabled="IsLoading">@TitleOkButton</MudButton>
+        <MudButton Color="Color.Error" OnClick="Cancel" Disabled="IsLoading">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
