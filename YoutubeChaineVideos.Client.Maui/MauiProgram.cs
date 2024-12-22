@@ -40,29 +40,25 @@ namespace YoutubeChaineVideos.Client.Maui
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
+            Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Development");
 #endif
             try
             {
                 var assembly = Assembly.GetExecutingAssembly();
-                var resourceName = "YoutubeChaineVideos.Client.Maui.wwwroot.appsettings.json";
-                using (var stream = assembly.GetManifestResourceStream(resourceName))
+                var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+                var resourceName = environment == "Development" ? "YoutubeChaineVideos.Client.Maui.wwwroot.appsettings.development.json" : "YoutubeChaineVideos.Client.Maui.wwwroot.appsettings.json";
+                using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new FileNotFoundException($"The configuration file '{resourceName}' was not found as an embedded resource.");
+                var configurationBuilder = new ConfigurationBuilder()
+                    .AddJsonStream(stream);
+                var configuration = configurationBuilder.Build();
+                var appSettings = configuration.GetSection("BaseSettingsApp").Get<BaseSettingsApp>() ?? new BaseSettingsApp
                 {
-                    if (stream == null)
-                    {
-                        throw new FileNotFoundException($"The configuration file '{resourceName}' was not found as an embedded resource.");
-                    }
-                    var configurationBuilder = new ConfigurationBuilder()
-                        .AddJsonStream(stream);
-                    var configuration = configurationBuilder.Build();
-                    var appSettings = configuration.GetSection("BaseSettingsApp").Get<BaseSettingsApp>() ?? new BaseSettingsApp
-                    {
-                        BaseTitleApp = string.Empty,
-                        BaseUrlApiAndroidHttp = string.Empty,
-                        BaseUrlApiWebHttp = string.Empty,
-                        ChosenEnviroment = string.Empty
-                    };
-                    builder.Services.AddSingleton(appSettings);
-                }
+                    BaseTitleApp = string.Empty,
+                    BaseUrlApiAndroidHttp = string.Empty,
+                    BaseUrlApiWebHttp = string.Empty,
+                    ChosenEnviroment = string.Empty
+                };
+                builder.Services.AddSingleton(appSettings);
             }
             catch (Exception ex)
             {

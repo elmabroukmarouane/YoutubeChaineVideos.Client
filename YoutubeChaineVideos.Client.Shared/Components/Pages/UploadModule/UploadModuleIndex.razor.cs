@@ -47,7 +47,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
         protected override async Task OnInitializedAsync()
         {
             TitleContent = BaseSettingsApp?.BaseTitleApp + " - Upload Youtube Videos";
-            Uri = $"{BaseSettingsApp?.BaseUrlApiWebHttp}Uploader";
+            Uri = $"{BaseSettingsApp?.BaseUrlApiWebHttp}UploaderVideo";
             //Token = await LocalStorageService!.GetItemAsStringAsync("token");
             await LoadData();
         }
@@ -123,7 +123,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
                         x => x.TitleOkButton, titleOkButton
                     },
                     {
-                        x => x.Uri, $"{BaseSettingsApp?.BaseUrlApiWebHttp}Uploader/UploadVideosYouTube"
+                        x => x.Uri, $"{BaseSettingsApp?.BaseUrlApiWebHttp}UploaderVideo/UploadVideosYouTube"
                     },
                     {
                         x => x.Token, Token
@@ -135,15 +135,15 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
 
                 if (!result!.Canceled)
                 {
-                    var data = (EntityDbResponse<VideoViewModel>)result.Data!;
+                    var data = (MessageStatus)result.Data!;
                     if (data != null)
                     {
                         await LoadData();
                         await Swal!.FireAsync(new SweetAlertOptions()
                         {
                             Title = titleOkButton,
-                            Text = data.MessageStatus?.Message,
-                            Icon = data.MessageStatus?.StatusCode == System.Net.HttpStatusCode.OK ? SweetAlertIcon.Success : SweetAlertIcon.Error
+                            Text = data?.Message,
+                            Icon = data?.StatusCode == System.Net.HttpStatusCode.OK ? SweetAlertIcon.Success : SweetAlertIcon.Error
                         });
                     }
                 }

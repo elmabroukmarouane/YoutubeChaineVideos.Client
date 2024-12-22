@@ -102,7 +102,7 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Class
                 return new MessageStatus()
                 {
                     StatusCode = response.StatusCode,
-                    Message = response.Content.ReadAsStringAsync().Result
+                    Message = response.IsSuccessStatusCode ? "Videos uploaded successfully !" : "Videos not uploaded !"
                 };
             }
             catch (Exception ex)
