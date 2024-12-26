@@ -9,6 +9,8 @@ using YoutubeChaineVideos.Client.Busines.Services.Class;
 using YoutubeChaineVideos.Client.Busines.Services.Interface;
 using YoutubeChaineVideos.Client.Domain.Models;
 using YoutubeChaineVideos.Client.Domain.Models.Settings;
+using YoutubeChaineVideos.Client.Shared.Services.Classes;
+
 
 namespace YoutubeChaineVideos.Client.Maui
 {
@@ -72,10 +74,14 @@ namespace YoutubeChaineVideos.Client.Maui
             builder.Services.AddTransient<IGenericService<YouTubeApiChannelViewModel>, GenericService<YouTubeApiChannelViewModel>>();
             builder.Services.AddTransient<IGenericService<YouTubeApiConfigViewModel>, GenericService<YouTubeApiConfigViewModel>>();
             builder.Services.AddTransient<IGenericService<VideoViewModel>, GenericService<VideoViewModel>>();
+            builder.Services.AddTransient<IGenericService<YouTubeApiAppLogViewModel>, GenericService<YouTubeApiAppLogViewModel>>();
             builder.Services.AddTransient<IVideoService, VideoService>();
             builder.Services.AddScoped<DialogService>();
             builder.Services.AddScoped<TooltipService>();
             builder.Services.AddTransient<ITitleService, TitleService>();
+
+            // Register a base path or URL for your application
+            builder.Services.AddSingleton<IYouTubeSourceAppProvider>(new YouTubeSourceAppProvider("Android"));
 
             return builder.Build();
         }

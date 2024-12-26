@@ -9,15 +9,13 @@ using MudBlazor;
 using CurrieTechnologies.Razor.SweetAlert2;
 using YoutubeChaineVideos.Client.Domain.Models;
 using YoutubeChaineVideos.Client.Domain.Models.Responses;
-using YoutubeChaineVideos.Client.Domain.Models.LambdaManagement.Models;
-using System.Net;
 using YoutubeChaineVideos.Client.Busines.Extensions.Logging;
+using System.Net;
 
-
-namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
+namespace YoutubeChaineVideos.Client.Shared.Components.Pages.LogModule
 {
     //[Authorize]
-    public partial class UploadModuleIndex : IComponent, IDisposable
+    public partial class YouTubeApiLogIndex : IComponent, IDisposable
     {
         [Inject]
         private IJSRuntime? JSRuntime { get; set; }
@@ -27,21 +25,21 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
         [Inject]
         ILocalStorageService? LocalStorageService { get; set; }
         [Inject]
-        protected IGenericService<VideoViewModel>? GenericService { get; set; }
+        protected IGenericService<YouTubeApiAppLogViewModel>? GenericService { get; set; }
         [Inject]
         TooltipService? TooltipService { get; set; }
         [Inject]
         private SweetAlertService? Swal { get; set; }
         private string TitleSwalTitle { get; set; } = string.Empty;
         private string MessageSwalTitle { get; set; } = string.Empty;
-        public static IList<VideoViewModel>? Items { get; set; }
+        public static IList<YouTubeApiAppLogViewModel>? Items { get; set; }
         public bool IsLoading { get; set; } = false;
         public int Count = 0;
         private RadzenFieldset? RadzenFieldsetUpload { get; set; }
         private RadzenFieldset? RadzenFieldsetDataGrid { get; set; }
-        private VideoViewModel SelectedItem { get; set; } = new();
-        private HashSet<VideoViewModel>? SelectedItems { get; set; }
-        public string? TableUploadString { get; set; } = string.Empty;
+        private YouTubeApiAppLogViewModel SelectedItem { get; set; } = new();
+        private HashSet<YouTubeApiAppLogViewModel>? SelectedItems { get; set; }
+        public string? TableSearchString { get; set; } = string.Empty;
         public string? Token { get; set; }
         [Inject]
         IDialogService? DialogService { get; set; }
@@ -53,8 +51,8 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
         public string? Uri { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            TitleContent = BaseSettingsApp?.BaseTitleApp + " - Upload Youtube Videos";
-            Uri = $"{BaseSettingsApp?.BaseUrlApiWebHttp}UploaderVideo";
+            TitleContent = BaseSettingsApp?.BaseTitleApp + " - YouTubeApiAppLogs";
+            Uri = BaseSettingsApp?.BaseUrlApiWebHttp + "Log";
             //Token = await LocalStorageService!.GetItemAsStringAsync("token");
             await LoadData();
         }
@@ -71,40 +69,9 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
             try
             {
                 IsLoading = true;
-                Items = null;
-                var filterDataModel = new FilterDataModel()
-                {
-                    LambdaExpressionModel = new LambdaExpressionModel()
-                    {
-                        RootGroup = new ConditionGroupModel()
-                        {
-                            Conditions =
-                            [
-                                new ConditionModel()
-                                {
-                                    PropertyName = "IsDownloaded",
-                                    ComparisonValue = null,
-                                    ComparisonType = "IsTrue"
-                                },
-                                new ConditionModel()
-                                {
-                                    PropertyName = "IsEdited",
-                                    ComparisonValue = null,
-                                    ComparisonType = "IsTrue"
-                                },
-                                new ConditionModel()
-                                {
-                                    PropertyName = "IsUploaded",
-                                    ComparisonValue = null,
-                                    ComparisonType = "IsTrue"
-                                }
-                            ]
-                        }
-                    }
-                };
-                Items = await GenericService!.GetEntitiesAsync($"{Uri!}/filter", Token, filterDataModel);
+                Items = await GenericService!.GetEntitiesAsync(Uri!, Token);
                 Items = Items?.OrderByDescending(x => x.Id).ToList();
-                Count = Items?.Count ?? 0;
+                Count = Items != null ? Items.Count : 0;
             }
             catch (Exception ex)
             {
@@ -112,7 +79,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
                     nameSpaceName: "YoutubeChaineVideos.Client.Shared",
                     statusCodeInt: (int)HttpStatusCode.InternalServerError,
                     statusCode: HttpStatusCode.InternalServerError.ToString(),
-                    actionName: "Components.Pages.UploadModule - LoadData()",
+                    actionName: "Components.Pages.YouTubeApiLogIndex - LoadData()",
                     exception: ex
                 );
                 await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()
@@ -123,58 +90,45 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
                 });
                 throw new Exception(ex.Message, ex);
             }
-            finally 
-            { 
-                IsLoading = false;
-            }
+            finally { IsLoading = false; }
         }
 
-        private bool FilterFunc1(VideoViewModel item) => GenericService!.FilterFunc(item, TableUploadString);
+        private bool FilterFunc1(YouTubeApiAppLogViewModel item) => GenericService!.FilterFunc(item, TableSearchString);
 
         private async Task ShowDialogAsync(
-            string TitileDialog = "Upload",
-            string titleOkButton = "Upload")
+            string TitileDialog = "Add",
+            YouTubeApiAppLogViewModel? YouTubeApiAppLogViewModel = null,
+            bool isUpdate = false,
+            string titleOkButton = "Add")
         {
             try
             {
-                var parameters = new DialogParameters<UploadModulePage>()
+                var parameters = new DialogParameters<YouTubeApiLogDetail>()
                 {
                     {
+                        x => x.YouTubeApiAppLogViewModel, YouTubeApiAppLogViewModel ?? new YouTubeApiAppLogViewModel()
+                    },
+                    {
                         x => x.TitleOkButton, titleOkButton
-                    },
-                    {
-                        x => x.Uri, $"{BaseSettingsApp?.BaseUrlApiWebHttp}UploaderVideo/UploadVideosYouTube"
-                    },
-                    {
-                        x => x.Token, Token
                     }
                 };
-                var options = new MudBlazor.DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
-                var dialog = await DialogService!.ShowAsync<UploadModulePage>(TitileDialog, parameters, options);
+                var options = new MudBlazor.DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
+                var dialog = await DialogService!.ShowAsync<YouTubeApiLogDetail>(TitileDialog, parameters, options);
                 var result = await dialog.Result;
 
                 if (!result!.Canceled)
                 {
-                    var data = (MessageStatus)result.Data!;
+                    var data = (EntityDbResponse<YouTubeApiAppLogViewModel>)result.Data!;
                     if (data != null)
                     {
                         await LoadData();
                         await Swal!.FireAsync(new SweetAlertOptions()
                         {
                             Title = titleOkButton,
-                            Text = data?.Message,
-                            Icon = data?.StatusCode == System.Net.HttpStatusCode.OK ? SweetAlertIcon.Success : SweetAlertIcon.Error
+                            Text = data.MessageStatus?.Message,
+                            Icon = data.MessageStatus?.StatusCode == HttpStatusCode.OK ? SweetAlertIcon.Success : SweetAlertIcon.Error
                         });
                     }
-                }
-                else
-                {
-                    await Swal!.FireAsync(new SweetAlertOptions()
-                    {
-                        Title = titleOkButton,
-                        Text = "Operation Canceled !",
-                        Icon = SweetAlertIcon.Warning
-                    });
                 }
             }
             catch (Exception ex)
@@ -183,7 +137,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
                     nameSpaceName: "YoutubeChaineVideos.Client.Shared",
                     statusCodeInt: (int)HttpStatusCode.InternalServerError,
                     statusCode: HttpStatusCode.InternalServerError.ToString(),
-                    actionName: "Components.Pages.UploadModule - ShowDialogAsync()",
+                    actionName: "Components.Pages.YouTubeApiLogIndex - ShowDialogAsync()",
                     exception: ex
                 );
                 await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()
@@ -196,26 +150,32 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
             }
         }
 
-        private async Task ShowTruncateTableDialogAsync(
-            string TitileDialog = "Upload",
-            string titleOkButton = "Upload")
+        private async Task ShowDeleteDialogAsync(
+            string TitileDialog = "Delete",
+            string titleOkButton = "Delete")
         {
             try
             {
-                var parameters = new DialogParameters<ClearTableUploadMobulePage>()
+                var parameters = new DialogParameters<YouTubeApiAppLogDelete>()
                 {
+                    {
+                        x => x.ContentMessageDelete, "Are you sure to delete this row ?"
+                    },
+                    {
+                        x => x.YouTubeApiAppLogViewModels, Items
+                    },
                     {
                         x => x.TitleOkButton, titleOkButton
                     },
                     {
-                        x => x.Uri, $"{Uri!}/Truncate"
+                        x => x.Uri, $"{Uri}/DeleteRange"
                     },
                     {
                         x => x.Token, Token
                     }
                 };
-                var options = new MudBlazor.DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
-                var dialog = await DialogService!.ShowAsync<ClearTableUploadMobulePage>(TitileDialog, parameters, options);
+                var options = new MudBlazor.DialogOptions() { CloseButton = true, BackdropClick = false };
+                var dialog = await DialogService!.ShowAsync<YouTubeApiAppLogDelete>(TitileDialog, parameters, options);
                 var result = await dialog.Result;
 
                 if (!result!.Canceled)
@@ -228,7 +188,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
                         {
                             Title = titleOkButton,
                             Text = data.Message,
-                            Icon = data.StatusCode == System.Net.HttpStatusCode.OK ? SweetAlertIcon.Success : SweetAlertIcon.Error
+                            Icon = data.StatusCode == HttpStatusCode.OK ? SweetAlertIcon.Success : SweetAlertIcon.Error
                         });
                     }
                 }
@@ -248,7 +208,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.UploadModule
                     nameSpaceName: "YoutubeChaineVideos.Client.Shared",
                     statusCodeInt: (int)HttpStatusCode.InternalServerError,
                     statusCode: HttpStatusCode.InternalServerError.ToString(),
-                    actionName: "Components.Pages.UploadModule - ShowTruncateTableDialogAsync()",
+                    actionName: "Components.Pages.YouTubeApiChannel - ShowDeleteDialogAsync()",
                     exception: ex
                 );
                 await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()

@@ -1,0 +1,14 @@
+﻿<MudDialog>
+    <DialogContent>
+        <div style="text-align: center;">
+            @ContentMessageDelete
+            <br />
+            <br />
+            <MudDatePicker Label="Date Limit" Placeholder="Select Date" Clearable="true" @bind-Date="DateToday" />
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Info" OnClick="Ok" Disabled="!Success || Errors.Count() > 0">@TitleOkButton</MudButton>
+        <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>

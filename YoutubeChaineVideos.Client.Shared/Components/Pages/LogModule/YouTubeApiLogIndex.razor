@@ -1,0 +1,85 @@
+﻿@page "/log-management.html"
+@using System.Text.Json
+<PageTitle>@TitleContent</PageTitle>
+
+<style>
+    .label-bold-summary {
+    font-weight: bold;
+    }
+</style>
+
+<div class="container-fluid px-4">
+    <TitleContent Title="YouTubeApiAppLogs" />
+    <DescriptionCardContent>
+        This is the YouTubeApiAppLogs module
+    </DescriptionCardContent>
+    <div class="card mb-4">
+        <TableHeader>
+            <i class="fas fa-table me-1"></i> YouTubeApiAppLogs Table
+        </TableHeader>
+        <RadzenFieldset @ref="RadzenFieldsetUpload" AllowCollapse="true" class="m-2">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="auto_delete" class="me-1" /><b>Delete</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard>
+                    <RadzenButton class="mb-4" Icon="auto_delete" ButtonStyle="ButtonStyle.Danger" Text="Delete" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Delete"))" Click="@(e => ShowDeleteDialogAsync())" />
+                </RadzenCard>
+            </ChildContent>
+            <SummaryTemplate>
+                <RadzenCard class="m-2">
+                    <label class="label-bold-summary">Click on + to show ADD Button</label>
+                </RadzenCard>
+            </SummaryTemplate>
+        </RadzenFieldset>
+        <RadzenFieldset @ref="RadzenFieldsetDataGrid" AllowCollapse="true" class="mb-2 ms-2 me-2">
+            <HeaderTemplate>
+                <span class="d-inline-flex align-items-center align-middle">
+                    <RadzenIcon Icon="category" class="me-1" /><b>YouTubeApiAppLogs List</b>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                @if (IsLoading)
+                {
+                    <LoadingPage />
+                }
+                else 
+                {
+                    <MudTable Items="@Items" FixedHeader="true" Dense="true" Hover="true" Bordered="false" Striped="true" Filter="new Func<YouTubeApiAppLogViewModel,bool>(FilterFunc1)" @bind-SelectedItem="SelectedItem" MultiSelection="true" SelectionChangeable="true" @bind-SelectedItems="SelectedItems">
+                        <ToolBarContent>
+                            <MudText Typo="Typo.h6">Items List</MudText>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="TableSearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiAppLogViewModel, string>(x => x?.Id!.ToString()!)">Id</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiAppLogViewModel, string>(x => x?.Level!)">Level</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiAppLogViewModel, string>(x => x?.Source!)">Source</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<YouTubeApiAppLogViewModel, string>(x => x?.CreateDate!.ToString()!)">Created Date</MudTableSortLabel></MudTh>
+                            <MudTh>Actions</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Id">@context.Id</MudTd>
+                            <MudTd DataLabel="Level">@context.Level</MudTd>
+                            <MudTd DataLabel="Source">@context.Source</MudTd>
+                            <MudTd DataLabel="CreateDate">@context.CreateDate.ToString()</MudTd>
+                            <MudTd>
+                                <RadzenButton Icon="data_info_alert" ButtonStyle="ButtonStyle.Primary" Variant="Radzen.Variant.Filled" Size="ButtonSize.Medium" @onclick:stopPropagation="true" MouseEnter="@(args => ShowTooltip(args, CreateTooltipOptions(), "Detail"))" Click="@(e => ShowDialogAsync("Detail", context, true, "Close"))" />
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager />
+                        </PagerContent>
+                    </MudTable>
+                }
+            </ChildContent>
+            <SummaryTemplate>
+                <RadzenCard class="mb-2 ms-2 me-2">
+                    <label class="label-bold-summary">@Count Videos @(Count > 1 ? "YouTubeApiAppLogs" : "YouTubeApiAppLog")</label>
+                </RadzenCard>
+            </SummaryTemplate>
+        </RadzenFieldset>
+    </div>
+</div>

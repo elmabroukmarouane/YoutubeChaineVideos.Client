@@ -9,6 +9,9 @@ using MudBlazor;
 using CurrieTechnologies.Razor.SweetAlert2;
 using YoutubeChaineVideos.Client.Domain.Models;
 using YoutubeChaineVideos.Client.Domain.Models.Responses;
+using YoutubeChaineVideos.Client.Busines.Extensions.Logging;
+using System.Net;
+
 
 namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeUploadVideoCredential
 {
@@ -42,6 +45,10 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeUploadVideoC
         public string? Token { get; set; }
         [Inject]
         IDialogService? DialogService { get; set; }
+        [Inject]
+        IYouTubeSourceAppProvider? YouTubeSourceAppProvider { get; set; }
+        [Inject]
+        protected IGenericService<YouTubeApiAppLogViewModel>? GenericLogService { get; set; }
         [Parameter]
         public string? Uri { get; set; }
         protected override async Task OnInitializedAsync()
@@ -70,6 +77,19 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeUploadVideoC
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Shared",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Components.Pages.YouTubeUploadVideoCredential - LoadData()",
+                    exception: ex
+                );
+                await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = YouTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
             finally { IsLoading = false; }
@@ -137,6 +157,19 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeUploadVideoC
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Shared",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Components.Pages.YouTubeUploadVideoCredential - ShowDialogAsync()",
+                    exception: ex
+                );
+                await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = YouTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
         }
@@ -196,6 +229,19 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeUploadVideoC
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Shared",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Components.Pages.YouTubeUploadVideoCredential - ShowDeleteDialogAsync()",
+                    exception: ex
+                );
+                await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = YouTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
         }

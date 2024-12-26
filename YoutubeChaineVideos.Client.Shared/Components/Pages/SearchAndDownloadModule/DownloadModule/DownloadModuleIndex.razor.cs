@@ -12,6 +12,9 @@ using YoutubeChaineVideos.Client.Domain.Models.Responses;
 using YoutubeChaineVideos.Client.Domain.Models.LambdaManagement.Models;
 using YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.ClearFoldersModule;
 using YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.ClearTableMobule;
+using System.Net;
+using YoutubeChaineVideos.Client.Busines.Extensions.Logging;
+
 
 namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadModule.DownloadModule
 {
@@ -44,6 +47,10 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
         public string? Token { get; set; }
         [Inject]
         IDialogService? DialogService { get; set; }
+        [Inject]
+        IYouTubeSourceAppProvider? YouTubeSourceAppProvider { get; set; }
+        [Inject]
+        protected IGenericService<YouTubeApiAppLogViewModel>? GenericLogService { get; set; }
         [Parameter]
         public string? Uri { get; set; }
         protected override async Task OnInitializedAsync()
@@ -102,6 +109,19 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Shared",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Components.Pages.SearchAndDownloadModule.DownloadModule - LoadData()",
+                    exception: ex
+                );
+                await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = YouTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
             finally { IsLoading = false; }
@@ -157,6 +177,19 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Shared",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Components.Pages.SearchAndDownloadModule.DownloadModule - ShowClearFoldersDialogAsync()",
+                    exception: ex
+                );
+                await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = YouTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
         }
@@ -209,6 +242,19 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Shared",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Components.Pages.SearchAndDownloadModule.DownloadModule - ShowDownloadVideosDialogAsync()",
+                    exception: ex
+                );
+                await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = YouTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
         }
@@ -261,6 +307,19 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Shared",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Components.Pages.SearchAndDownloadModule.DownloadModule - ShowTruncateTableDialogAsync()",
+                    exception: ex
+                );
+                await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = YouTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
         }

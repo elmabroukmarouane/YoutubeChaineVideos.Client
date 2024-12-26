@@ -9,6 +9,8 @@ using MudBlazor.Services;
 using Radzen;
 using CurrieTechnologies.Razor.SweetAlert2;
 using YoutubeChaineVideos.Client.Domain.Models.Settings;
+using YoutubeChaineVideos.Client.Shared.Services.Classes;
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -49,9 +51,13 @@ builder.Services.AddTransient<IGenericService<YouTubeUploadVideoCredentialViewMo
 builder.Services.AddTransient<IGenericService<YouTubeApiChannelViewModel>, GenericService<YouTubeApiChannelViewModel>>();
 builder.Services.AddTransient<IGenericService<YouTubeApiConfigViewModel>, GenericService<YouTubeApiConfigViewModel>>();
 builder.Services.AddTransient<IGenericService<VideoViewModel>, GenericService<VideoViewModel>>();
+builder.Services.AddTransient<IGenericService<YouTubeApiAppLogViewModel>, GenericService<YouTubeApiAppLogViewModel>>();
 builder.Services.AddTransient<IVideoService, VideoService>();
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddTransient<ITitleService, TitleService>();
+
+// Register a base path or URL for your application
+builder.Services.AddSingleton<IYouTubeSourceAppProvider>(new YouTubeSourceAppProvider("Web"));
 
 await builder.Build().RunAsync();

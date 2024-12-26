@@ -17,8 +17,11 @@
     <PackageReference Include="DataTables.Blazor" Version="3.6.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
     <PackageReference Include="MudBlazor" Version="7.15.0" />
-    <PackageReference Include="Radzen.Blazor" Version="5.6.11" />
+    <PackageReference Include="Radzen.Blazor" Version="5.7.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Components\Pages\LogModule\YouTubeApiAppLogDelete.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Update="Components\Pages\YouTubeApiConfig\YouTubeApiConfigAddUpdate.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
