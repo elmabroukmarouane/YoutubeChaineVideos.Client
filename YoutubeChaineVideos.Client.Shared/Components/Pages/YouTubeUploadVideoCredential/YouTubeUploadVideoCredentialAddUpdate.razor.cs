@@ -5,6 +5,9 @@ using YoutubeChaineVideos.Client.Busines.Services.Interface;
 using YoutubeChaineVideos.Client.Domain.Models.Responses;
 using YoutubeChaineVideos.Client.Domain.Models.Settings;
 using System.Reflection;
+using YoutubeChaineVideos.Client.Busines.Extensions.Logging;
+using System.Net;
+
 
 namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeUploadVideoCredential
 {
@@ -29,6 +32,10 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeUploadVideoC
         protected IGenericService<YouTubeUploadVideoCredentialViewModel>? GenericService { get; set; }
         [Inject]
         private BaseSettingsApp? BaseSettingsApp { get; set; }
+        [Inject]
+        IYouTubeSourceAppProvider? YouTubeSourceAppProvider { get; set; }
+        [Inject]
+        protected IGenericService<YouTubeApiAppLogViewModel>? GenericLogService { get; set; }
 
         private void Cancel() => MudDialog?.Cancel();
 
@@ -64,7 +71,7 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeUploadVideoC
         private string GetPropertyValue(PropertyInfo property) =>
         property.GetValue(YouTubeUploadVideoCredentialViewModel)?.ToString() ?? string.Empty;
 
-        private void OnValueChanged(PropertyInfo property, string newValue)
+        private async Task OnValueChangedAsync(PropertyInfo property, string newValue)
         {
             try
             {
@@ -73,6 +80,19 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.YouTubeUploadVideoC
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Shared",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Components.Pages.YouTubeUploadVideoCredential - OnValueChanged()",
+                    exception: ex
+                );
+                await GenericLogService!.CreateAsync(BaseSettingsApp?.BaseUrlApiWebHttp + "Log", Token, new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = YouTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception($"Error setting value for {property.Name}: {ex.Message}", ex);
             }
         }

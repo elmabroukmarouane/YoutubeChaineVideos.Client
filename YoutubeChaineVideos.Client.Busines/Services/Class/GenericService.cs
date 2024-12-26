@@ -4,54 +4,118 @@ using YoutubeChaineVideos.Client.Domain.Models.LambdaManagement.Models;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using YoutubeChaineVideos.Client.Domain.Models.Settings;
+using System.Net;
+using YoutubeChaineVideos.Client.Busines.Extensions.Logging;
 
 namespace YoutubeChaineVideos.Client.Busines.Services.Class
 {
-    public class GenericService<TEntityViewModel>(HttpClient httpClient) : IGenericService<TEntityViewModel> where TEntityViewModel : Entity
+    public class GenericService<TEntityViewModel>(HttpClient httpClient, BaseSettingsApp? baseSettingsApp, IYouTubeSourceAppProvider? youTubeSourceAppProvider) : IGenericService<TEntityViewModel> where TEntityViewModel : Entity
     {
         #region ATTRIBUTES
         protected readonly HttpClient _httpClient = httpClient ?? throw new ArgumentException(null, nameof(httpClient));
-
+        protected readonly BaseSettingsApp? _baseSettingsApp = baseSettingsApp ?? throw new ArgumentException(null, nameof(baseSettingsApp));
+        protected readonly IYouTubeSourceAppProvider? _youTubeSourceAppProvider = youTubeSourceAppProvider ?? throw new ArgumentException(null, nameof(youTubeSourceAppProvider));
         #endregion
 
         #region READ
         public async Task<IList<TEntityViewModel>?> GetEntitiesAsync(string uri, string? token, string? includes = null)
         {
-            // SetTokenToHeader(token);
-            var EntitiesResponse = await _httpClient.GetAsync(uri);
-            var Entities = await EntitiesResponse.Content.ReadFromJsonAsync<IList<TEntityViewModel>>();
-            if(Entities is not null)
+            try
             {
-                foreach (var entity in Entities)
+                // SetTokenToHeader(token);
+                var EntitiesResponse = await _httpClient.GetAsync(uri);
+                var Entities = await EntitiesResponse.Content.ReadFromJsonAsync<IList<TEntityViewModel>>();
+                if (Entities is not null)
                 {
-                    entity.StatusCode = EntitiesResponse.StatusCode;
+                    foreach (var entity in Entities)
+                    {
+                        entity.StatusCode = EntitiesResponse.StatusCode;
+                    }
                 }
+                return Entities;
             }
-            return Entities;
+            catch (Exception ex)
+            {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Busines",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Services.Class.GenericService - GetEntitiesAsync()",
+                    exception: ex
+                );
+                await _httpClient.PostAsJsonAsync(baseSettingsApp?.BaseUrlApiWebHttp + "Log", new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = _youTubeSourceAppProvider?.GetSourceApp(),
+                });
+                throw new Exception(ex.Message, ex);
+            }
         }
 
         public async Task<TEntityViewModel?> GetEntitiesAsync(string uri, string? token, int id, string? includes = null)
         {
-            // SetTokenToHeader(token);
-            var EntitiesResponse = await _httpClient.GetAsync(uri);
-            var Entity = await EntitiesResponse.Content.ReadFromJsonAsync<TEntityViewModel>();
-            if(Entity is not null) Entity.StatusCode = EntitiesResponse?.StatusCode ?? System.Net.HttpStatusCode.InternalServerError;
-            return Entity;
+            try
+            {
+                // SetTokenToHeader(token);
+                var EntitiesResponse = await _httpClient.GetAsync(uri);
+                var Entity = await EntitiesResponse.Content.ReadFromJsonAsync<TEntityViewModel>();
+                if (Entity is not null) Entity.StatusCode = EntitiesResponse?.StatusCode ?? System.Net.HttpStatusCode.InternalServerError;
+                return Entity;
+            }
+            catch (Exception ex)
+            {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Busines",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Services.Class.GenericService - GetEntitiesAsync()",
+                    exception: ex
+                );
+                await _httpClient.PostAsJsonAsync(baseSettingsApp?.BaseUrlApiWebHttp + "Log", new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = _youTubeSourceAppProvider?.GetSourceApp(),
+                });
+                throw new Exception(ex.Message, ex);
+            }
         }
 
         public async Task<IList<TEntityViewModel>?> GetEntitiesAsync(string uri, string? token, FilterDataModel filterDataModel)
         {
-            // SetTokenToHeader(token);
-            var response = await _httpClient.PostAsJsonAsync(uri, filterDataModel);
-            var entitiesResponse = await response.Content.ReadFromJsonAsync<IList<TEntityViewModel>>();
-            if (entitiesResponse is not null)
+            try
             {
-                foreach (var entity in entitiesResponse)
+                // SetTokenToHeader(token);
+                var response = await _httpClient.PostAsJsonAsync(uri, filterDataModel);
+                var entitiesResponse = await response.Content.ReadFromJsonAsync<IList<TEntityViewModel>>();
+                if (entitiesResponse is not null)
                 {
-                    entity.StatusCode = response.StatusCode;
+                    foreach (var entity in entitiesResponse)
+                    {
+                        entity.StatusCode = response.StatusCode;
+                    }
                 }
+                return entitiesResponse;
             }
-            return entitiesResponse;
+            catch (Exception ex)
+            {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Busines",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Services.Class.GenericService - GetEntitiesAsync()",
+                    exception: ex
+                );
+                await _httpClient.PostAsJsonAsync(baseSettingsApp?.BaseUrlApiWebHttp + "Log", new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = _youTubeSourceAppProvider?.GetSourceApp(),
+                });
+                throw new Exception(ex.Message, ex);
+            }
         }
         #endregion
 
@@ -68,6 +132,19 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Class
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Busines",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Services.Class.GenericService - CreateAsync()",
+                    exception: ex
+                );
+                await _httpClient.PostAsJsonAsync(baseSettingsApp?.BaseUrlApiWebHttp + "Log", new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = _youTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
         }
@@ -90,6 +167,19 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Class
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Busines",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Services.Class.GenericService - CreateAsync()",
+                    exception: ex
+                );
+                await _httpClient.PostAsJsonAsync(baseSettingsApp?.BaseUrlApiWebHttp + "Log", new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = _youTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
         }
@@ -108,6 +198,19 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Class
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Busines",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Services.Class.GenericService - UpdateAsync()",
+                    exception: ex
+                );
+                await _httpClient.PostAsJsonAsync(baseSettingsApp?.BaseUrlApiWebHttp + "Log", new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = _youTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
 
@@ -131,6 +234,19 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Class
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Busines",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Services.Class.GenericService - UpdateAsync()",
+                    exception: ex
+                );
+                await _httpClient.PostAsJsonAsync(baseSettingsApp?.BaseUrlApiWebHttp + "Log", new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = _youTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
         }
@@ -153,6 +269,19 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Class
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Busines",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Services.Class.GenericService - DeleteAsync()",
+                    exception: ex
+                );
+                await _httpClient.PostAsJsonAsync(baseSettingsApp?.BaseUrlApiWebHttp + "Log", new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = _youTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
         }
@@ -179,6 +308,19 @@ namespace YoutubeChaineVideos.Client.Busines.Services.Class
             }
             catch (Exception ex)
             {
+                var log = LoggingMessaging.LoggingMessageError(
+                    nameSpaceName: "YoutubeChaineVideos.Client.Busines",
+                    statusCodeInt: (int)HttpStatusCode.InternalServerError,
+                    statusCode: HttpStatusCode.InternalServerError.ToString(),
+                    actionName: "Services.Class.GenericService - DeleteAsync()",
+                    exception: ex
+                );
+                await _httpClient.PostAsJsonAsync(baseSettingsApp?.BaseUrlApiWebHttp + "Log", new YouTubeApiAppLogViewModel()
+                {
+                    Level = "Error",
+                    Message = log,
+                    Source = _youTubeSourceAppProvider?.GetSourceApp(),
+                });
                 throw new Exception(ex.Message, ex);
             }
         }

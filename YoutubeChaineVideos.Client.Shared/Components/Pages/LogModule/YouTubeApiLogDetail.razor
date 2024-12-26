@@ -1,0 +1,17 @@
+﻿<MudDialog>
+    <DialogContent>
+        <label style="font-weight: bold; text-decoration: underline;">ID : </label>
+        @YouTubeApiAppLogViewModel?.Id
+        <br /><br />
+        <label style="font-weight: bold; text-decoration: underline;">LEVEL : </label>
+        @YouTubeApiAppLogViewModel?.Level
+        <br /><br />
+        <label style="font-weight: bold; text-decoration: underline;">LOG : </label><br /><br />
+        <CodeSnippet>@YouTubeApiAppLogViewModel?.Message</CodeSnippet>
+        <label style="font-weight: bold; text-decoration: underline;">SOURCE : </label>
+        @YouTubeApiAppLogViewModel?.Source
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Info" OnClick="Cancel">@TitleOkButton</MudButton>
+    </DialogActions>
+</MudDialog>
