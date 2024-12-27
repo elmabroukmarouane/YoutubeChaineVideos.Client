@@ -87,6 +87,7 @@ This guide outlines the steps to deploy a Blazor WebAssembly app to IIS and publ
 1. Open your Android project in Android Studio.
 2. Set the build configuration to `Release`:
    - Go to **Build > Select Build Variant** and choose `release` for your app module.
+   - Add `android:usesCleartextTraffic="true"` to `<application android:usesCleartextTraffic="true" ...></application>` in `AndroidManifest.xml`, if you are using `http`. Not required when using `https`
 3. Sign the app:
    - Go to **Build > Generate Signed Bundle / APK**.
    - Select **APK** and click **Next**.
