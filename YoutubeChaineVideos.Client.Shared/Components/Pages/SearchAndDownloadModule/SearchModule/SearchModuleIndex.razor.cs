@@ -49,8 +49,6 @@ namespace YoutubeChaineVideos.Client.Shared.Components.Pages.SearchAndDownloadMo
         [Inject]
         IDialogService? DialogService { get; set; }
         [Inject]
-        ILogger? Logger { get; set; }
-        [Inject]
         IYouTubeSourceAppProvider? YouTubeSourceAppProvider { get; set; }
         [Inject]
         protected IGenericService<YouTubeApiAppLogViewModel>? GenericLogService { get; set; }
