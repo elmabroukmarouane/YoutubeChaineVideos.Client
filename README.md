@@ -98,10 +98,9 @@ This guide outlines the steps to deploy a Blazor WebAssembly app to IIS and publ
 ---
 
 ### 2. Generate and Export the APK
-1. Go to Project -> Properties -> Android -> Then Select APK -> net8.0-android and select APK
-2. Publish the project
-3. Wait for Visual Studio to generate the signed APK file.
-4. The APK file will be saved in the specified output directory, typically `app/release` or click on Open Folder in the bottom to open the default output of the APK.
+1. In the Publish page, click on Distribute, Select Ad Hoc, create a signing Identity if not created, and fill all the information and finally click on Save As to set the output folder
+2. Wait for Visual Studio to generate the signed APK file.
+3. The APK file will be saved in the specified output directory or click on Open Folder in the bottom to open the default output of the APK.
 
 ---
 
