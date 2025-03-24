@@ -84,17 +84,17 @@ This guide outlines the steps to deploy a Blazor WebAssembly app to IIS and publ
 ## Publishing an Android App
 
 ### 1. Prepare Your Android App
-1. Open your Android project in Android Studio.
+1. Open your Android project in Visual Studio.
 2. Set the build configuration to `Release`:
    - Go to **Build > Select Build Variant** and choose `release` for your app module.
    - Add `android:usesCleartextTraffic="true"` to `<application android:usesCleartextTraffic="true" ...></application>` in `AndroidManifest.xml`, if you are using `http`. Not required when using `https`
 3. Sign the app:
-   - Go to **Build > Generate Signed Bundle / APK**.
-   - Select **APK** and click **Next**.
-   - Choose or create a **key store** file and enter the required credentials.
-   - Set the **key alias** and password, then click **Next**.
-   - Select **Release** build and click **Finish**.
-
+   - Open your .NET MAUI or Xamarin.Android project in Visual Studio 2022.
+   - In Solution Explorer, right-click on your Android project and select Properties.
+   - Go to Android Package Signing (for Xamarin) or Android settings (for .NET MAUI).
+   - Look for the Android Package Format option:
+   - If it's set to "Android App Bundle (.aab)", change it to "APK (.apk)".
+   - Save the changes.
 ---
 
 ### 2. Generate and Export the APK
